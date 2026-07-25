@@ -7,8 +7,8 @@
     <style>
         /* color scheme */
         :root {
-            --bg: #325334;
-            --surface: #e75f2079;
+            --bg: #324e53;
+            --surface: #fffaf879;
             --border: #fff;
             --text: #ffffff;
             --accent: #095000;
@@ -27,75 +27,59 @@
             height: auto;
             background: var(--accent);
             align-items: center;
+            width: auto;
             /* justify-content: right; */
-            
-            
-
         }
 
         .header-left {
             border: 1px solid black;
-            width: 25%;
+            padding-left: 0.67rem;
+            width: auto;
             align-items: center;
             justify-content: center;
         }
-        /* .header-one {
-            display: flex;
-            align-items:  right;
-            border: 1px solid black;
-            justify-content: right;
-        } */
 
-            .header-right{
+        .header-right{
+            display:flex;
             border: 1px solid black;
             width: 25%;
-            text-align: center;
-            }
+            justify-content: right;
+            padding-right: 0.67rem;
+            /* margin:0.67rem; */
+            /* text-align: center; */
+        }
             
-            .header-center{
-                width: 50%;
-            }
-        .header-left .logo{
-            height: 6.7rem;
-            margin: 0.67rem;
+        .header-center{
+            width: 75%;
+        }
+        .header-right .logo{
+            height: 5rem;
+            /* margin: 0.67rem; */
         }
 
-
-        /* .body-main{
-            display: flex;
-            flex-direction: column;
-        } */
         .base {
             background: var(--surface);
-            opacity: 1;
             margin: 1.25rem;
             height: 50rem;
-            
-
         }
-
-
 
     </style>
 </head>
 <body>
-    
 
 <div class="body-main">
     <div class="nav-top">
 
-    <div class = "header-left">
-    <img  class="logo" src="Specs Logo.png">
-
+    <div class="header-left">
+        <h1>REVSPECS</h1>
     </div>
      <div class="header-center">
 
      </div>
 
     <div class="header-right">
-        <h1>REVSPECS</h1>
+    <img class="logo" src="Specs Logo.png" alt="SPECS logo">
     </div>
-
 
     </div>
     <div class="base">
