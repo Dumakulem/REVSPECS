@@ -14,7 +14,19 @@
             --accent: #095000;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* Animation keyFrames */
+        @keyframes slideLeft {
+            from {
+                transform: translateX(-100%);
+                opacity: 0
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1
+            }
+        }
 
+        
         body {
             background: var(--bg);
             display: flex;
@@ -24,33 +36,38 @@
         
         .nav-top{
             display: flex;
-            height: auto;
+            /* height: auto; */
             background: var(--accent);
             align-items: center;
-            width: auto;
+            /* width: auto; */
+            border-bottom: 1px solid black;
             /* justify-content: right; */
         }
 
         .header-left {
+            display: flex;
             border: 1px solid black;
             padding-left: 0.67rem;
-            width: auto;
+            /* width: auto; */
             align-items: center;
-            justify-content: center;
+            /* justify-content: center; */
+            flex-shrink: 0;
         }
 
         .header-right{
             display:flex;
+            flex-shrink: 0;
+            align-items: center;
             border: 1px solid black;
-            width: 25%;
-            justify-content: right;
+            /* width: 25%; */
+            justify-content: flex-end;
             padding-right: 0.67rem;
             /* margin:0.67rem; */
             /* text-align: center; */
         }
             
         .header-center{
-            width: 75%;
+            flex: 1;
         }
         .header-right .logo{
             height: 5rem;
@@ -60,7 +77,11 @@
         .base {
             background: var(--surface);
             margin: 1.25rem;
-            height: 50rem;
+            /* height: 50rem; */
+            padding: 2rem;
+            max-width: 40rem;
+            animation: slideLeft 2s ease-out forwards;
+            border-radius: 0.67rem;
         }
 
     </style>
@@ -83,7 +104,8 @@
 
     </div>
     <div class="base">
-        gyat gyat
+        <h1>Welcome to REVSPECS!</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut eius alias, dolore error, consequuntur quos ipsam, tenetur qui ab enim sit reiciendis laboriosam. Ullam rem, illo eos exercitationem numquam perspiciatis!</p>
     </div>
 </div>
 
