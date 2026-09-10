@@ -36,8 +36,10 @@
     --overlay-tint: 27, 67, 50;
     --shadow-tint: 0, 0, 0;
     --about-panel: #c0ffca;
-    --about-text: #6db97a;
+    --about-text: #245c33;
     --toggle-text: #517a51;
+    /* Heading colour for content that sits on a LIGHT panel (fixes blending) */
+    --panel-heading: #10291b;
     color-scheme: light;
   }
 
@@ -108,6 +110,7 @@
     --about-panel: #16281F;
     --about-text: #E9F5EE;
     --toggle-text: #517a51;
+    --panel-heading: #E9F5EE;
     color-scheme: dark;
   }
 
@@ -148,12 +151,33 @@
     letter-spacing: -0.01em;
   }
 
+  /* ---------- Tagline: larger + high-contrast text shadow ---------- */
   .tagline{
     font-size: 0.92rem;
+    line-height: 1.45;
     color: var(--ink-soft);
-    max-width: 30ch;
+    font-weight: 500;
+    max-width: 34ch;
     text-align:right;
     margin:0;
+    text-shadow:
+      0 0 6px rgba(255,255,255,0.80),
+      0 1px 2px rgba(0,0,0,0.35);
+  }
+
+  [data-theme="dark"] .tagline{
+    color: var(--ink);
+    text-shadow:
+      0 0 6px rgba(0,0,0,0.85),
+      0 1px 2px rgba(0,0,0,0.60);
+  }
+
+  /* +25% on tablet / laptop / desktop only (mobile stays as-is) */
+  @media (min-width: 521px){
+    .tagline{
+      font-size: 1.15rem;
+      max-width: 36ch;
+    }
   }
 
   .about-fab{
@@ -341,11 +365,13 @@
     .about-fab{ width: 56px; height: 56px; bottom: 16px; right: 16px; }
   }
 
+  /* ---------- Choice modal ---------- */
   .choice-modal h2{
     font-family:'Roboto Condensed', sans-serif;
     font-size: 1.15rem;
     margin: 0 0 4px;
-    color: var(--ink);
+    /* FIX: was var(--ink), which blended into the light panel */
+    color: var(--panel-heading);
     padding-right: 24px;
   }
 
@@ -490,18 +516,38 @@
   [data-year="2"] .subject-card{ border-left-color: var(--y2); }
   [data-year="3"] .subject-card{ border-left-color: var(--y3); }
 
+  /* ---------- Footer: larger + high-contrast text shadow ---------- */
   footer{
     margin-top: 36px;
     font-size: 0.8rem;
+    line-height: 1.55;
     color: var(--ink-soft);
+    font-weight: 500;
     border-top: 1px solid var(--line);
     padding-top: 14px;
+    text-shadow:
+      0 0 6px rgba(255,255,255,0.80),
+      0 1px 2px rgba(0,0,0,0.35);
+  }
+
+  [data-theme="dark"] footer{
+    color: var(--ink);
+    text-shadow:
+      0 0 6px rgba(0,0,0,0.85),
+      0 1px 2px rgba(0,0,0,0.60);
   }
 
   footer .credit{
     margin: 6px 0 0;
     font-size: 0.76rem;
-    color: var(--ink-soft);
+    color: inherit;
+    opacity: 0.92;
+  }
+
+  /* +25% on tablet / laptop / desktop only (mobile stays as-is) */
+  @media (min-width: 521px){
+    footer{ font-size: 1rem; }
+    footer .credit{ font-size: 0.95rem; }
   }
 
   body.modal-open{ overflow: hidden; }
@@ -643,12 +689,12 @@
 
 <div class="parallax-bg">
     <div class="parallax-stage" id="parallaxStage">
-        <div class="parallax-layer layer-sky"          data-speed="0"   data-tile="320"></div>
-        <div class="parallax-layer layer-clouds-back"  data-speed=".06" data-tile="160"></div>
-        <div class="parallax-layer layer-clouds-front" data-speed="2"   data-tile="160"></div>
-        <div class="parallax-layer layer-water"        data-speed="10"  data-tile="172"></div>
-        <div class="parallax-layer layer-terrain"      data-speed="10"  data-tile="172"></div>
-        <div class="parallax-layer layer-grass"        data-speed="20"  data-tile="151"></div>
+        <div class="parallax-layer layer-sky"          data-speed="0" data-tile="320"></div>
+        <div class="parallax-layer layer-clouds-back"  data-speed="2" data-tile="160"></div>
+        <div class="parallax-layer layer-clouds-front" data-speed="3" data-tile="160"></div>
+        <div class="parallax-layer layer-water"        data-speed="4" data-tile="172"></div>
+        <div class="parallax-layer layer-terrain"      data-speed="4" data-tile="172"></div>
+        <div class="parallax-layer layer-grass"        data-speed="6" data-tile="151"></div>
     </div>
 </div>
 
