@@ -671,8 +671,8 @@
   </div>
 
   <footer>
-    RevSpecs &copy; 2026 - 2027 — built for Gordon College BSCS Students.
-    <p class="credit">Developed by Perez, Emilio James — 2nd Year Representative.</p>
+    RevSpecs A.Y. 2026 - 2027 — built for Gordon College BSCS Students.
+    <p class="credit">Developed and Proposed by Perez, Emilio James — 2nd Year Representative.</p>
   </footer>
 </div>
 
