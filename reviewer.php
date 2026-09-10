@@ -248,7 +248,9 @@ $subject = $subjects[$subjectCode] ?? null;
                 border-radius: 8px;
                 font-weight: 700;
                 font-family: 'Roboto Condensed', sans-serif;
-                font-size: 0.85rem;
+                /* BIGGER ARROWS: was 0.85rem */
+                font-size: 1.6rem;
+                line-height: 1;
                 cursor: pointer;
                 touch-action: manipulation;
                 display: flex;
@@ -296,7 +298,12 @@ $subject = $subjects[$subjectCode] ?? null;
         /* ---------- Extra-narrow phones ---------- */
         @media (max-width: 360px) {
             .mobile-controls { gap: 2px; padding-left: 4px; padding-right: 4px; }
-            .mobile-controls .nav-btn { max-width: 56px; padding: 10px 4px; font-size: 0.78rem; }
+            .mobile-controls .nav-btn {
+                max-width: 56px;
+                padding: 10px 4px;
+                /* BIGGER ARROWS on narrow phones: was 0.78rem */
+                font-size: 1.35rem;
+            }
             .mobile-controls .zoom-btn { width: 40px; height: 40px; font-size: 1.1rem; }
             .mobile-controls .download-btn { padding: 0 8px; font-size: 0.78rem; height: 40px; border-radius: 20px; }
             .mobile-toolbar .title { font-size: 0.9rem; }
