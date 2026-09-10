@@ -466,7 +466,7 @@ $subject = $subjects[$subjectCode] ?? null;
     </div>
 
     <!-- Desktop Header -->
-    <a class="back-link" href=".\>&larr; Back to RevSpecs</a>
+    <a class="back-link" href=".\">&larr; Back to RevSpecs</a>
     <header>
         <h1><?php echo htmlspecialchars($subject['name'] ?? 'Reviewer not found'); ?></h1>
         <p class="tagline">
