@@ -9,6 +9,16 @@ $subject = $subjects[$subjectCode] ?? null;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RevSpecs — <?php echo htmlspecialchars($subject['name'] ?? 'Reviewer'); ?></title>
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('revspecs-theme');
+          var wantsDark = stored ? stored === 'dark'
+                                 : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (wantsDark) document.documentElement.setAttribute('data-theme', 'dark');
+        } catch (e) {}
+      })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
@@ -23,7 +33,30 @@ $subject = $subjects[$subjectCode] ?? null;
             --accent: #e67e22;
             --accent-dark: #cf6c1b;
             --download: #27ae60;
+            --toolbar-bg: #f8f9fa;
+            --viewer-bg: #e9ecef;
+            /* paper = the blank area behind a PDF page */
+            --paper-bg: #ffffff;
+            --paper-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            color-scheme: light;
         }
+
+        [data-theme="dark"] {
+            --bg: #0F1E18;
+            --panel: #16281F;
+            --text: #E9F5EE;
+            --text-soft: #93BCA9;
+            --border: #2A4638;
+            --accent: #F0964C;
+            --accent-dark: #E67E22;
+            --download: #35C97A;
+            --toolbar-bg: #1b2f25;
+            --viewer-bg: #0a1410;
+            --paper-bg: #1a1a1a;
+            --paper-shadow: 0 2px 10px rgba(0,0,0,0.55);
+            color-scheme: dark;
+        }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0;
@@ -31,6 +64,7 @@ $subject = $subjects[$subjectCode] ?? null;
             background: var(--bg);
             color: var(--text);
             overscroll-behavior: none;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         /* ---------- Desktop ---------- */
@@ -45,27 +79,27 @@ $subject = $subjects[$subjectCode] ?? null;
             header {
                 background: var(--panel); border-radius: 12px; padding: 20px;
                 margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                transition: background-color 0.2s ease;
             }
             h1 { margin: 0 0 4px; font-family: 'Roboto Condensed', sans-serif; }
             .tagline { color: var(--text-soft); font-size: 0.9rem; margin: 0; }
             .viewer-card {
                 background: var(--panel); border-radius: 12px; padding: 16px;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                transition: background-color 0.2s ease;
             }
             .toolbar {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                /* FIX: was flex-wrap: wrap — the added Fullscreen button made the
-                   right-hand group drop onto a second row. Keep one row and let
-                   the groups shrink instead. */
                 flex-wrap: nowrap;
                 gap: 12px;
                 margin-bottom: 16px;
                 padding: 10px 14px;
-                background: #f8f9fa;
+                background: var(--toolbar-bg);
                 border-radius: 8px;
                 border: 1px solid var(--border);
+                transition: background-color 0.2s ease, border-color 0.2s ease;
             }
             .toolbar-left, .toolbar-right {
                 display: flex;
@@ -76,7 +110,6 @@ $subject = $subjects[$subjectCode] ?? null;
             }
             .toolbar-left { flex-shrink: 1; }
             .toolbar-right { flex-shrink: 0; }
-            /* slightly tighter buttons so everything fits on one row */
             .toolbar .btn,
             .toolbar .download-btn-desktop { padding: 8px 12px; }
             .toolbar .fs-toggle { padding: 8px 12px; }
@@ -84,15 +117,30 @@ $subject = $subjects[$subjectCode] ?? null;
             #pdfContainer {
                 display: flex; flex-direction: column; align-items: stretch; gap: 16px;
                 max-height: 80vh; overflow-y: auto; overflow-x: auto; padding: 16px;
-                background: #e9ecef; border-radius: 8px; -webkit-overflow-scrolling: touch;
+                background: var(--viewer-bg); border-radius: 8px; -webkit-overflow-scrolling: touch;
+                transition: background-color 0.2s ease;
             }
             .pdf-page {
-                background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                background: var(--paper-bg); box-shadow: var(--paper-shadow);
                 border-radius: 4px; overflow: hidden; flex-shrink: 0;
-                margin: 0 auto; /* auto margins center it but still allow scrolling to any
-                                   part that overflows once zoomed past the container width */
+                margin: 0 auto;
+                transition: background-color 0.2s ease;
             }
             .pdf-page canvas { display: block; }
+
+            /* ============================================================
+               DARK MODE FOR THE PDF PAGES THEMSELVES
+               Smart-invert: flip luminance, then rotate hue back 180° so
+               colored photos and diagrams don't turn into their negative.
+               Runs on the GPU, so toggling the theme is instant.
+               ============================================================ */
+            [data-theme="dark"] .pdf-page canvas {
+                filter: invert(1) hue-rotate(180deg);
+            }
+            /* Blend the invert seam against any page padding the canvas
+               doesn't cover (e.g. during re-render) */
+            [data-theme="dark"] .pdf-page { isolation: isolate; }
+
             .jump-row {
                 margin-top: 12px; display: flex; align-items: center; justify-content: center;
                 gap: 8px; font-size: 0.85rem; color: var(--text-soft);
@@ -100,6 +148,7 @@ $subject = $subjects[$subjectCode] ?? null;
             .jump-row input {
                 width: 60px; padding: 6px; border: 2px solid var(--border);
                 border-radius: 6px; text-align: center; font-family: inherit;
+                background: var(--panel); color: var(--text);
             }
             footer { margin-top: 20px; text-align: center; font-size: 0.8rem; color: var(--text-soft); }
             .mobile-toolbar, .mobile-controls { display: none; }
@@ -110,10 +159,6 @@ $subject = $subjects[$subjectCode] ?? null;
             body { height: 100vh; height: 100dvh; overflow: hidden; position: fixed; width: 100%; }
             .container { height: 100vh; height: 100dvh; display: flex; flex-direction: column; padding: 0; }
 
-            /* FIX: was targeting ".desktop-toolbar" (a class that doesn't exist).
-               The desktop toolbar's actual id is "desktopToolbar" — this selector
-               mismatch was why the desktop toolbar never got hidden on phones,
-               causing it to overlap the dedicated mobile bottom bar. */
             .back-link, header, #desktopToolbar, .jump-row, footer { display: none; }
 
             .mobile-toolbar {
@@ -127,6 +172,7 @@ $subject = $subjects[$subjectCode] ?? null;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.08);
                 z-index: 10;
                 flex-shrink: 0;
+                transition: background-color 0.2s ease;
             }
             .mobile-toolbar .back-btn {
                 background: none;
@@ -141,7 +187,7 @@ $subject = $subjects[$subjectCode] ?? null;
             }
             .mobile-toolbar .title {
                 flex: 1;
-                min-width: 0; /* lets text-overflow: ellipsis actually kick in inside the flex row */
+                min-width: 0;
                 text-align: center;
                 font-family: 'Roboto Condensed', sans-serif;
                 font-weight: 700;
@@ -159,16 +205,24 @@ $subject = $subjects[$subjectCode] ?? null;
             }
             .viewer-card { flex: 1; display: flex; flex-direction: column; min-height: 0; }
             #pdfContainer {
-                flex: 1; overflow-y: auto; overflow-x: auto; background: #525659;
+                flex: 1; overflow-y: auto; overflow-x: auto;
+                background: #525659;
                 padding: 8px 0; -webkit-overflow-scrolling: touch; display: flex;
                 flex-direction: column; align-items: stretch; min-height: 0;
                 touch-action: pan-x pan-y pinch-zoom;
             }
             .pdf-page {
-                margin: 4px auto; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-                background: white; flex-shrink: 0; overflow: hidden;
+                margin: 4px auto; box-shadow: var(--paper-shadow);
+                background: var(--paper-bg); flex-shrink: 0; overflow: hidden;
+                transition: background-color 0.2s ease;
             }
             .pdf-page canvas { display: block; }
+
+            /* Same smart-invert on phones */
+            [data-theme="dark"] .pdf-page canvas {
+                filter: invert(1) hue-rotate(180deg);
+            }
+
             .mobile-controls {
                 display: flex;
                 align-items: center;
@@ -176,13 +230,13 @@ $subject = $subjects[$subjectCode] ?? null;
                 gap: 4px;
                 background: var(--panel);
                 padding: 6px 8px;
-                /* account for the home-indicator safe area on notched phones */
                 padding-bottom: calc(6px + env(safe-area-inset-bottom));
                 border-top: 1px solid var(--border);
                 box-shadow: 0 -2px 4px rgba(0,0,0,0.08);
                 min-height: var(--controls-height);
                 flex-shrink: 0;
                 z-index: 10;
+                transition: background-color 0.2s ease;
             }
             .mobile-controls .nav-btn {
                 flex: 1;
@@ -208,7 +262,7 @@ $subject = $subjects[$subjectCode] ?? null;
                 background: var(--panel);
                 border: 2px solid var(--border);
                 color: var(--text);
-                width: 44px;  /* bumped from 40px to meet the ~44px touch-target guideline */
+                width: 44px;
                 height: 44px;
                 flex-shrink: 0;
                 border-radius: 50%;
@@ -236,7 +290,7 @@ $subject = $subjects[$subjectCode] ?? null;
                 white-space: nowrap;
                 flex-shrink: 0;
             }
-            .mobile-controls .download-btn:active { background: #219a52; }
+            .mobile-controls .download-btn:active { background: var(--accent-dark); }
         }
 
         /* ---------- Extra-narrow phones ---------- */
@@ -259,7 +313,7 @@ $subject = $subjects[$subjectCode] ?? null;
             padding: 8px 14px;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
             white-space: nowrap;
         }
         .btn:hover { background: var(--accent); border-color: var(--accent); color: white; }
@@ -281,13 +335,14 @@ $subject = $subjects[$subjectCode] ?? null;
             gap: 4px;
             transition: background 0.2s;
         }
-        .download-btn-desktop:hover { background: #219a52; }
+        .download-btn-desktop:hover { background: var(--accent-dark); }
 
         .page-loading { padding: 20px; text-align: center; color: var(--text-soft); }
         .status { padding: 40px 0; text-align: center; color: var(--text-soft); }
         .error { color: #c0392b; }
+        [data-theme="dark"] .error { color: #ff8a80; }
 
-        /* ---------- Fullscreen toggle buttons ---------- */
+        /* ---------- Fullscreen toggle ---------- */
         .fs-toggle {
             display: inline-flex;
             align-items: center;
@@ -316,11 +371,17 @@ $subject = $subjects[$subjectCode] ?? null;
         }
         .mobile-toolbar .icon-btn:active { background: var(--border); }
 
-        /* ---------- Fullscreen layout ----------
-           Two selectors per rule:
-             .container:fullscreen      -> native Element.requestFullscreen()
-             body.pseudo-fullscreen ... -> CSS-only fallback for browsers that
-                                           refuse element fullscreen (iOS Safari) */
+        /* ---------- Toolbar back button ---------- */
+        .toolbar-back {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            flex-shrink: 0;
+            text-decoration: none;
+        }
+
+        /* ---------- Fullscreen layout ---------- */
         .container:fullscreen,
         body.pseudo-fullscreen .container {
             max-width: none;
@@ -361,7 +422,6 @@ $subject = $subjects[$subjectCode] ?? null;
             box-shadow: none;
         }
         @media (max-width: 768px) {
-            /* on phones let the dark viewer bleed all the way to the edges */
             .container:fullscreen .viewer-card,
             body.pseudo-fullscreen .viewer-card { padding: 0; }
         }
@@ -424,6 +484,7 @@ $subject = $subjects[$subjectCode] ?? null;
             <!-- Desktop Toolbar -->
             <div class="toolbar" id="desktopToolbar">
                 <div class="toolbar-left">
+                    <a href=".\" class="btn toolbar-back" title="Back to RevSpecs">← Back</a>
                     <button class="btn" id="prevBtn">← Prev</button>
                     <span>Page <strong id="currentPageNum">1</strong> of <span id="totalPages">?</span></span>
                     <button class="btn" id="nextBtn">Next →</button>
@@ -460,9 +521,7 @@ $subject = $subjects[$subjectCode] ?? null;
         RevSpecs · Reviewer PDFs are uploaded by SPECS officers, not students.
     </footer>
 
-    <!-- Mobile Bottom Controls: lives INSIDE .container so it's a real flex
-         child of the fixed-height column, not a sibling that gets pushed
-         past the viewport and clipped by the body's overflow:hidden. -->
+    <!-- Mobile Bottom Controls -->
     <div class="mobile-controls" id="mobileControls">
         <button class="nav-btn" id="mobilePrevBtn">←</button>
         <button class="zoom-btn" id="mobileZoomOut">−</button>
@@ -547,10 +606,8 @@ $subject = $subjects[$subjectCode] ?? null;
     }
 
     async function toggleFullscreen() {
-        // Leaving the CSS fallback
         if (pseudoFullscreen) { exitPseudoFullscreen(); return; }
 
-        // Leaving real fullscreen
         const fsEl = currentFsElement();
         if (fsEl) {
             try {
@@ -559,10 +616,9 @@ $subject = $subjects[$subjectCode] ?? null;
             } catch (err) {
                 console.warn('Exit fullscreen failed:', err);
             }
-            return; // the fullscreenchange listener refreshes UI + layout
+            return;
         }
 
-        // Entering
         const request = fullscreenTarget.requestFullscreen || fullscreenTarget.webkitRequestFullscreen;
         if (!request) { enterPseudoFullscreen(); return; }
 
@@ -580,11 +636,23 @@ $subject = $subjects[$subjectCode] ?? null;
     ['fullscreenchange', 'webkitfullscreenchange'].forEach(function(evt) {
         document.addEventListener(evt, function() {
             updateFullscreenUI();
-            scheduleRelayout(100); // page size changes -> re-render at the new width
+            scheduleRelayout(100);
         });
     });
 
-    updateFullscreenUI(); // paint the icons on first load
+    updateFullscreenUI();
+
+    /* ================= Theme sync =================
+       Inline <head> script already applied the theme at paint time.
+       This listener picks up toggles from index.php in another tab.
+       The PDF "dark mode" is pure CSS (filter on canvas), so no
+       re-render is needed — the filter just starts/stops applying. */
+    window.addEventListener('storage', function (e) {
+        if (e.key !== 'revspecs-theme') return;
+        const dark = e.newValue === 'dark';
+        if (dark) document.documentElement.setAttribute('data-theme', 'dark');
+        else document.documentElement.removeAttribute('data-theme');
+    });
 
     /* ================= Layout / rendering ================= */
     let resizeTimer = null;
@@ -652,14 +720,13 @@ $subject = $subjects[$subjectCode] ?? null;
                 fitWidth = window.innerWidth;
             } else {
                 fitWidth = container.clientWidth - 32;
-                // allow bigger pages while fullscreen, but still keep them sane
                 const maxFitWidth = isFullscreenActive() ? 1200 : 800;
                 if (fitWidth > maxFitWidth) fitWidth = maxFitWidth;
             }
 
             const fitScale = fitWidth / baseViewport.width;
-            const displayScale = fitScale * zoomLevel;   // this is what actually controls the on-screen size
-            const renderScale = displayScale * DPR;      // this is just backing-buffer resolution, for sharpness
+            const displayScale = fitScale * zoomLevel;
+            const renderScale = displayScale * DPR;
 
             const displayWidth = Math.round(baseViewport.width * displayScale);
             const displayHeight = Math.round(baseViewport.height * displayScale);
@@ -668,7 +735,6 @@ $subject = $subjects[$subjectCode] ?? null;
             const canvas = document.createElement('canvas');
             canvas.width = viewport.width;
             canvas.height = viewport.height;
-            // Explicit pixel size (not "100%") so the canvas actually grows/shrinks with zoom
             canvas.style.width = displayWidth + 'px';
             canvas.style.height = displayHeight + 'px';
 
@@ -696,7 +762,6 @@ $subject = $subjects[$subjectCode] ?? null;
         document.getElementById('mobilePrevBtn')?.addEventListener('click', () => navigateToPage(currentPage - 1));
         document.getElementById('mobileNextBtn')?.addEventListener('click', () => navigateToPage(currentPage + 1));
 
-        // Fullscreen toggle (desktop toolbar + mobile top bar)
         document.getElementById('fullscreenBtn')?.addEventListener('click', toggleFullscreen);
         document.getElementById('mobileFullscreenBtn')?.addEventListener('click', toggleFullscreen);
 
@@ -716,7 +781,6 @@ $subject = $subjects[$subjectCode] ?? null;
         document.getElementById('mobileZoomIn')?.addEventListener('click', () => changeZoom(0.5));
         document.getElementById('mobileZoomOut')?.addEventListener('click', () => changeZoom(-0.5));
 
-        // Throttled scroll handling via requestAnimationFrame
         let scrollTicking = false;
         container.addEventListener('scroll', () => {
             if (scrollTicking) return;
@@ -743,7 +807,6 @@ $subject = $subjects[$subjectCode] ?? null;
             else if ((e.key === 'f' || e.key === 'F') && !typing) toggleFullscreen();
         });
 
-        // Touch swipe
         let touchStartX = 0, touchStartY = 0, isSwiping = false;
         container.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
@@ -771,7 +834,6 @@ $subject = $subjects[$subjectCode] ?? null;
             }
         }, { passive: true });
 
-        // Recalculate layout on rotation/resize (debounced), re-render current page at new width
         window.addEventListener('resize', () => scheduleRelayout(300));
     }
 
