@@ -21,6 +21,17 @@
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;700&display=swap"></noscript>
 <meta name="theme-color" id="themeColorMeta" content="#FFFFFF">
 <style>
+  /* ============================================================
+     CUSTOM PIXEL FONT (header only)
+     ============================================================ */
+  @font-face {
+    font-family: 'OutlinePixel7';
+    src: url('Fonts/outline_pixel-7.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
   :root{
     --paper: #517a51;
     --panel: #ccf8d3;
@@ -38,7 +49,6 @@
     --about-panel: #c0ffca;
     --about-text: #245c33;
     --toggle-text: #517a51;
-    /* Heading colour for content that sits on a LIGHT panel (fixes blending) */
     --panel-heading: #10291b;
     color-scheme: light;
   }
@@ -143,15 +153,17 @@
     flex-wrap: wrap;
   }
 
+  /* ---------- HEADER: Outline Pixel-7 ---------- */
   h1{
-    font-family:'Roboto Condensed', sans-serif;
+    font-family: 'OutlinePixel7', 'Roboto Condensed', sans-serif;
     font-weight:700;
-    font-size: 2.1rem;
+    font-size: 2.9rem;
     margin:0;
     letter-spacing: -0.01em;
+    image-rendering: pixelated;
   }
 
-  /* ---------- Tagline: larger + high-contrast text shadow ---------- */
+  /* ---------- TAGLINE: back to Roboto ---------- */
   .tagline{
     font-size: 0.92rem;
     line-height: 1.45;
@@ -175,7 +187,7 @@
   /* +25% on tablet / laptop / desktop only (mobile stays as-is) */
   @media (min-width: 521px){
     .tagline{
-      font-size: 1.15rem;
+      font-size: 1rem;
       max-width: 36ch;
     }
   }
@@ -311,9 +323,8 @@
     border-top: 1px solid var(--line);
   }
 
-  /* Music row sits directly under dark mode with no gap */
   .theme-toggle-row + .theme-toggle-row{
-    margin-top: -18px;   /* cancel the margin-top trick if needed */
+    margin-top: -18px;
   }
 
   .theme-toggle-label{
@@ -370,7 +381,6 @@
     font-family:'Roboto Condensed', sans-serif;
     font-size: 1.15rem;
     margin: 0 0 4px;
-    /* FIX: was var(--ink), which blended into the light panel */
     color: var(--panel-heading);
     padding-right: 24px;
   }
@@ -516,7 +526,7 @@
   [data-year="2"] .subject-card{ border-left-color: var(--y2); }
   [data-year="3"] .subject-card{ border-left-color: var(--y3); }
 
-  /* ---------- Footer: larger + high-contrast text shadow ---------- */
+  /* ---------- FOOTER: back to Roboto ---------- */
   footer{
     margin-top: 36px;
     font-size: 0.8rem;
@@ -636,7 +646,6 @@
   overflow: hidden;
   position: relative;
 
-  /* soft fade at the edges */
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0,
