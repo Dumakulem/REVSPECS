@@ -35,7 +35,6 @@ $subject = $subjects[$subjectCode] ?? null;
             --download: #27ae60;
             --toolbar-bg: #f8f9fa;
             --viewer-bg: #e9ecef;
-            /* paper = the blank area behind a PDF page */
             --paper-bg: #ffffff;
             --paper-shadow: 0 2px 8px rgba(0,0,0,0.15);
             color-scheme: light;
@@ -61,11 +60,63 @@ $subject = $subjects[$subjectCode] ?? null;
         body {
             margin: 0;
             font-family: 'Roboto', sans-serif;
-            background: var(--bg);
+            background: transparent;
             color: var(--text);
             overscroll-behavior: none;
             transition: background-color 0.2s ease, color 0.2s ease;
         }
+
+        /* ============================================================
+           PARALLAX BACKGROUND
+           ============================================================ */
+        .parallax-bg {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+            background: #000;
+        }
+
+        .parallax-stage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 320px;
+            height: 178px;
+            transform-origin: center center;
+            transform: translate(-50%, -50%) scale(var(--scale, 1));
+        }
+
+        .parallax-layer {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            background-repeat: repeat-x;
+            image-rendering: pixelated;
+            pointer-events: none;
+            will-change: background-position;
+            backface-visibility: hidden;
+        }
+
+        .layer-sky {
+            top: 0; height: 200px;
+            background-image: url("Day/background_1_day.png");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        .layer-clouds-back  { bottom: 0; height: 120px; background-image: url("Day/background_2_day.png"); z-index: 2; }
+        .layer-clouds-front { bottom: 0; height: 115px; background-image: url("Day/background_3_day.png"); z-index: 3; }
+        .layer-water        { bottom: 0; height: 70px;  background-image: url("Day/background_5_day.png"); z-index: 4; }
+        .layer-terrain      { bottom: 0; height: 89px;  background-image: url("Day/background_4_day.png"); z-index: 5; }
+        .layer-grass        { bottom: 0; height: 40px;  background-image: url("Day/background_6_day.png"); z-index: 6; }
+
+        [data-theme="dark"] .layer-sky          { background-image: url("Night/background_1_night.png"); }
+        [data-theme="dark"] .layer-clouds-back  { background-image: url("Night/background_2_night.png"); }
+        [data-theme="dark"] .layer-clouds-front { background-image: url("Night/background_3_night.png"); }
+        [data-theme="dark"] .layer-water        { background-image: url("Night/background_5_night.png"); }
+        [data-theme="dark"] .layer-terrain      { background-image: url("Night/background_4_night.png"); }
+        [data-theme="dark"] .layer-grass        { background-image: url("Night/background_6_night.png"); }
 
         /* ---------- Desktop ---------- */
         @media (min-width: 769px) {
@@ -128,17 +179,9 @@ $subject = $subjects[$subjectCode] ?? null;
             }
             .pdf-page canvas { display: block; }
 
-            /* ============================================================
-               DARK MODE FOR THE PDF PAGES THEMSELVES
-               Smart-invert: flip luminance, then rotate hue back 180° so
-               colored photos and diagrams don't turn into their negative.
-               Runs on the GPU, so toggling the theme is instant.
-               ============================================================ */
             [data-theme="dark"] .pdf-page canvas {
                 filter: invert(1) hue-rotate(180deg);
             }
-            /* Blend the invert seam against any page padding the canvas
-               doesn't cover (e.g. during re-render) */
             [data-theme="dark"] .pdf-page { isolation: isolate; }
 
             .jump-row {
@@ -218,7 +261,6 @@ $subject = $subjects[$subjectCode] ?? null;
             }
             .pdf-page canvas { display: block; }
 
-            /* Same smart-invert on phones */
             [data-theme="dark"] .pdf-page canvas {
                 filter: invert(1) hue-rotate(180deg);
             }
@@ -248,7 +290,6 @@ $subject = $subjects[$subjectCode] ?? null;
                 border-radius: 8px;
                 font-weight: 700;
                 font-family: 'Roboto Condensed', sans-serif;
-                /* BIGGER ARROWS: was 0.85rem */
                 font-size: 1.6rem;
                 line-height: 1;
                 cursor: pointer;
@@ -301,7 +342,6 @@ $subject = $subjects[$subjectCode] ?? null;
             .mobile-controls .nav-btn {
                 max-width: 56px;
                 padding: 10px 4px;
-                /* BIGGER ARROWS on narrow phones: was 0.78rem */
                 font-size: 1.35rem;
             }
             .mobile-controls .zoom-btn { width: 40px; height: 40px; font-size: 1.1rem; }
@@ -448,16 +488,352 @@ $subject = $subjects[$subjectCode] ?? null;
             flex-shrink: 0;
         }
 
-        /* Hide the download button while in fullscreen */
         .container:fullscreen .download-btn-desktop,
         .container:fullscreen .download-btn,
         body.pseudo-fullscreen .download-btn-desktop,
         body.pseudo-fullscreen .download-btn {
             display: none !important;
         }
+
+        /* ---------- Fullscreen: hide/show controls ---------- */
+        .fs-hide-toggle { display: none; }
+        .fs-show-bar { display: none; }
+
+        .container:fullscreen .fs-hide-toggle,
+        body.pseudo-fullscreen .fs-hide-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .container:fullscreen.fs-idle .toolbar,
+        body.pseudo-fullscreen.fs-idle .toolbar,
+        .container:fullscreen.fs-idle .jump-row,
+        body.pseudo-fullscreen.fs-idle .jump-row {
+            display: none !important;
+        }
+
+        .container:fullscreen.fs-idle .fs-show-bar,
+        body.pseudo-fullscreen.fs-idle .fs-show-bar {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            position: fixed;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 16px;
+            background: var(--panel);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            z-index: 100001;
+            transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+            animation: fsShowBarIn 0.2s ease-out;
+        }
+        .container:fullscreen.fs-idle .fs-show-bar:hover,
+        body.pseudo-fullscreen.fs-idle .fs-show-bar:hover {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        @keyframes fsShowBarIn {
+            from { opacity: 0; transform: translate(-50%, -8px); }
+            to   { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        @media (max-width: 768px) {
+            .fs-hide-toggle,
+            .fs-show-bar { display: none !important; }
+        }
+
+        /* ============================================================
+           FAB + About modal
+           ============================================================ */
+        .about-fab{
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: none;
+            padding: 0;
+            overflow: hidden;
+            cursor: pointer;
+            background: var(--download);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+            z-index: 99999;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease;
+        }
+        .about-fab:hover{ transform: scale(1.06); box-shadow: 0 6px 14px rgba(0,0,0,0.3); }
+        .about-fab:focus-visible{ outline: 3px solid var(--text); outline-offset: 3px; }
+
+        .about-fab-img{
+            width: 100%;
+            height: 100%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            object-fit: contain;
+        }
+
+        .about-overlay{
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding: 24px;
+            z-index: 100000;
+        }
+        .about-overlay[hidden]{ display:none; }
+
+        .about-modal{
+            background: var(--panel);
+            border-radius: 3px;
+            border-top: 6px solid var(--download);
+            padding: 28px 30px;
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+            transition: background-color 0.2s ease;
+        }
+
+        .about-modal-close{
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background: var(--border);
+            color: var(--text);
+            font-size: 1rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .about-modal-close:hover{ background: var(--accent); color: #fff; }
+
+        .about-modal h2{
+            font-family:'Roboto Condensed', sans-serif;
+            font-size: 1.2rem;
+            margin: 0 0 10px;
+            color: var(--download);
+            padding-right: 24px;
+        }
+
+        .about-modal p{
+            margin: 0 0 18px;
+            font-size: 0.92rem;
+            color: var(--text-soft);
+        }
+
+        .facebook-placeholder{
+            display:inline-flex;
+            align-items:center;
+            gap: 10px;
+            text-decoration:none;
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 3px;
+            transition: border-color 0.15s ease, color 0.15s ease;
+        }
+        .facebook-placeholder:hover{ border-color: var(--accent); color: var(--accent); }
+        .facebook-placeholder .placeholder-thumb{
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--border);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: var(--text);
+            flex-shrink:0;
+        }
+
+        .theme-toggle-row{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap: 12px;
+            margin: 0 0 18px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        .theme-toggle-row + .theme-toggle-row{ margin-top: -18px; }
+
+        .theme-toggle-label{
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .theme-toggle{
+            position: relative;
+            width: 44px;
+            height: 24px;
+            border-radius: 999px;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            cursor: pointer;
+            padding: 0;
+            flex-shrink: 0;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .theme-toggle-thumb{
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--text-soft);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        .theme-toggle[aria-checked="true"]{
+            background: var(--download);
+            border-color: var(--download);
+        }
+        .theme-toggle[aria-checked="true"] .theme-toggle-thumb{
+            transform: translateX(20px);
+            background: #fff;
+        }
+        .theme-toggle:focus-visible{
+            outline: 2px solid var(--text);
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 768px){
+            .about-fab{
+                width: 52px;
+                height: 52px;
+                right: 12px;
+                bottom: calc(var(--controls-height) + env(safe-area-inset-bottom, 0px) + 12px);
+            }
+        }
+
+        /* "Click me →" hint */
+        .fab-hint {
+            position: fixed;
+            bottom: calc(24px + 32px);
+            right:  calc(24px + 64px + 14px);
+            transform: translateY(50%);
+            white-space: nowrap;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font: 600 13px/1 'Roboto', sans-serif;
+            color: #fff;
+            background: #1f2430;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
+            z-index: 99998;
+            pointer-events: none;
+            opacity: 0;
+            animation: fabHintIn .45s ease-out .6s forwards,
+                       fabHintBob 1.8s ease-in-out 1.2s infinite;
+            transition: opacity .3s ease, transform .3s ease;
+        }
+        .fab-hint::after {
+            content: "";
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 6px solid transparent;
+            border-left-color: #1f2430;
+        }
+        [data-theme="dark"] .fab-hint        { background: #f1f3f7; color: #12151c; }
+        [data-theme="dark"] .fab-hint::after { border-left-color: #f1f3f7; }
+
+        @keyframes fabHintIn {
+            from { opacity: 0; transform: translateY(50%) translateX(-8px); }
+            to   { opacity: 1; transform: translateY(50%) translateX(0);    }
+        }
+        @keyframes fabHintBob {
+            0%, 100% { transform: translateY(50%) translateX(0); }
+            50%      { transform: translateY(50%) translateX(6px); }
+        }
+        .fab-hint.is-hidden {
+            animation: none;
+            opacity: 0;
+            transform: translateY(50%) translateX(-8px);
+        }
+        @media (max-width: 768px) {
+            .fab-hint {
+                bottom: calc(var(--controls-height) + env(safe-area-inset-bottom, 0px) + 12px + 26px);
+                right:  calc(12px + 52px + 12px);
+                font-size: 12px;
+                padding: 7px 12px;
+            }
+        }
+
+        .credit-marquee{
+            margin-top: 18px;
+            padding: 10px 0;
+            border-top: 1px solid var(--border);
+            overflow: hidden;
+            position: relative;
+            -webkit-mask-image: linear-gradient(to right, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
+        }
+        .credit-marquee-track{
+            display: inline-flex;
+            gap: 60px;
+            white-space: nowrap;
+            will-change: transform;
+            animation: creditScroll 18s linear infinite;
+        }
+        .credit-marquee-item{
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-soft);
+            opacity: 0.85;
+        }
+        .credit-marquee:hover .credit-marquee-track{ animation-play-state: paused; }
+        @keyframes creditScroll{
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce){
+            .credit-marquee-track{ animation: none; overflow-x: auto; }
+        }
+
+        body.modal-open{ overflow: hidden; }
+
+        @media (prefers-reduced-motion: reduce){
+            *{ transition: none !important; animation: none !important; }
+        }
     </style>
 </head>
 <body>
+
+<!-- Parallax background -->
+<div class="parallax-bg">
+    <div class="parallax-stage" id="parallaxStage">
+        <div class="parallax-layer layer-sky"          data-speed="0" data-tile="320"></div>
+        <div class="parallax-layer layer-clouds-back"  data-speed="2" data-tile="160"></div>
+        <div class="parallax-layer layer-clouds-front" data-speed="3" data-tile="160"></div>
+        <div class="parallax-layer layer-water"        data-speed="4" data-tile="172"></div>
+        <div class="parallax-layer layer-terrain"      data-speed="4" data-tile="172"></div>
+        <div class="parallax-layer layer-grass"        data-speed="6" data-tile="151"></div>
+    </div>
+</div>
+
 <div class="container">
     <!-- Mobile Toolbar -->
     <div class="mobile-toolbar" id="mobileToolbar">
@@ -506,6 +882,9 @@ $subject = $subjects[$subjectCode] ?? null;
                             aria-pressed="false" title="Enter fullscreen">
                         <span class="fs-icon"></span><span id="fullscreenLabel">Fullscreen</span>
                     </button>
+                    <button class="btn fs-hide-toggle" id="hideToolbarBtn" type="button" title="Hide controls">
+                        <span aria-hidden="true">▲</span> Hide
+                    </button>
                     <a href="<?php echo htmlspecialchars($subject['pdf']); ?>" download class="download-btn-desktop">⬇ Download</a>
                 </div>
             </div>
@@ -536,7 +915,60 @@ $subject = $subjects[$subjectCode] ?? null;
         <a href="<?php echo $subject ? htmlspecialchars($subject['pdf']) : '#'; ?>" download class="download-btn">⬇ PDF</a>
         <button class="nav-btn" id="mobileNextBtn">→</button>
     </div>
+
+    <!-- "Show controls" pill (visible only in fullscreen when controls are hidden) -->
+    <button class="fs-show-bar" id="showToolbarBtn" type="button" aria-label="Show controls">
+        <span aria-hidden="true">▼</span> Show controls
+    </button>
 </div>
+
+<!-- Floating About button -->
+<button class="about-fab" id="aboutBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="aboutOverlay">
+  <img src="specsLogo.png" class="about-fab-img" alt="SPECS logo">
+</button>
+
+<!-- "Click me →" hint -->
+<span class="fab-hint" id="fabHint" aria-hidden="true">Click me&nbsp;→</span>
+
+<div class="about-overlay" id="aboutOverlay" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" hidden>
+  <div class="about-modal">
+    <button class="about-modal-close" id="aboutClose" aria-label="Close">&times;</button>
+    <h2 id="aboutTitle">Gordon College &amp; SPECS</h2>
+    <p>
+      The Society of Programming Enthusiasts in Computer Science (SPECS) is an organization under the GCCCS
+    </p>
+
+    <div class="theme-toggle-row">
+      <span class="theme-toggle-label" id="themeToggleLabel">Dark mode</span>
+      <button class="theme-toggle" id="themeToggle" role="switch" aria-checked="false" aria-labelledby="themeToggleLabel">
+        <span class="theme-toggle-thumb"></span>
+      </button>
+    </div>
+
+    <div class="theme-toggle-row">
+      <span class="theme-toggle-label" id="musicToggleLabel">Music</span>
+      <button class="theme-toggle" id="musicToggle" role="switch" aria-checked="false" aria-labelledby="musicToggleLabel">
+        <span class="theme-toggle-thumb"></span>
+      </button>
+    </div>
+
+    <a class="facebook-placeholder" href="https://www.facebook.com/gcccsSPECS" target="_blank" rel="noopener">
+      <span class="placeholder-thumb">FB</span>
+      SPECS' Official Facebook Page
+    </a>
+
+    <div class="credit-marquee" aria-label="Music credit">
+      <div class="credit-marquee-track">
+        <span class="credit-marquee-item">♪ Clair de Lune — Claude Debussy</span>
+        <span class="credit-marquee-item" aria-hidden="true">♪ Clair de Lune — Claude Debussy</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<audio id="bgm" loop preload="auto">
+  <source src="Music/Clair.mp3" type="audio/mpeg">
+</audio>
 
 <?php if ($subject): ?>
 <script>
@@ -582,6 +1014,10 @@ $subject = $subjects[$subjectCode] ?? null;
         return !!currentFsElement() || pseudoFullscreen;
     }
 
+    function setControlsHidden(hidden) {
+        fullscreenTarget.classList.toggle('fs-idle', !!hidden);
+    }
+
     function updateFullscreenUI() {
         const active = isFullscreenActive();
 
@@ -608,6 +1044,7 @@ $subject = $subjects[$subjectCode] ?? null;
     function exitPseudoFullscreen() {
         pseudoFullscreen = false;
         document.body.classList.remove('pseudo-fullscreen');
+        setControlsHidden(false);
         updateFullscreenUI();
         scheduleRelayout(50);
     }
@@ -643,23 +1080,12 @@ $subject = $subjects[$subjectCode] ?? null;
     ['fullscreenchange', 'webkitfullscreenchange'].forEach(function(evt) {
         document.addEventListener(evt, function() {
             updateFullscreenUI();
+            if (!isFullscreenActive()) setControlsHidden(false);
             scheduleRelayout(100);
         });
     });
 
     updateFullscreenUI();
-
-    /* ================= Theme sync =================
-       Inline <head> script already applied the theme at paint time.
-       This listener picks up toggles from index.php in another tab.
-       The PDF "dark mode" is pure CSS (filter on canvas), so no
-       re-render is needed — the filter just starts/stops applying. */
-    window.addEventListener('storage', function (e) {
-        if (e.key !== 'revspecs-theme') return;
-        const dark = e.newValue === 'dark';
-        if (dark) document.documentElement.setAttribute('data-theme', 'dark');
-        else document.documentElement.removeAttribute('data-theme');
-    });
 
     /* ================= Layout / rendering ================= */
     let resizeTimer = null;
@@ -771,6 +1197,13 @@ $subject = $subjects[$subjectCode] ?? null;
 
         document.getElementById('fullscreenBtn')?.addEventListener('click', toggleFullscreen);
         document.getElementById('mobileFullscreenBtn')?.addEventListener('click', toggleFullscreen);
+
+        document.getElementById('hideToolbarBtn')?.addEventListener('click', function() {
+            if (isFullscreenActive()) setControlsHidden(true);
+        });
+        document.getElementById('showToolbarBtn')?.addEventListener('click', function() {
+            setControlsHidden(false);
+        });
 
         document.getElementById('jumpBtn')?.addEventListener('click', () => {
             const n = parseInt(document.getElementById('jumpInput').value, 10);
@@ -905,5 +1338,221 @@ $subject = $subjects[$subjectCode] ?? null;
 })();
 </script>
 <?php endif; ?>
+
+<script>
+/* ============================================================
+   FAB + modal + theme + music + parallax
+   (runs independently of the PDF viewer)
+   ============================================================ */
+
+/* ---------- Modal helper ---------- */
+const openOverlays = [];
+
+function setupModal(overlay, { onOpen, onClose } = {}) {
+  let lastFocused = null;
+
+  function getFocusable() {
+    return Array.from(
+      overlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+    ).filter(el => el.offsetParent !== null);
+  }
+
+  function open(trigger) {
+    lastFocused = trigger || document.activeElement;
+    overlay.hidden = false;
+    document.body.classList.add('modal-open');
+    if (onOpen) onOpen();
+    const focusable = getFocusable();
+    (focusable[0] || overlay).focus();
+  }
+
+  function close() {
+    if (overlay.hidden) return;
+    overlay.hidden = true;
+    document.body.classList.remove('modal-open');
+    if (onClose) onClose();
+    if (lastFocused) lastFocused.focus();
+  }
+
+  overlay.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const focusable = getFocusable();
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  });
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) close();
+  });
+
+  const controller = { overlay, open, close };
+  openOverlays.push(controller);
+  return controller;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  openOverlays.forEach(({ overlay, close }) => { if (!overlay.hidden) close(); });
+});
+
+/* About modal */
+const aboutBtn = document.getElementById('aboutBtn');
+const aboutOverlay = document.getElementById('aboutOverlay');
+const aboutClose = document.getElementById('aboutClose');
+
+const aboutModal = setupModal(aboutOverlay, {
+  onOpen: () => aboutBtn.setAttribute('aria-expanded', 'true'),
+  onClose: () => aboutBtn.setAttribute('aria-expanded', 'false'),
+});
+
+aboutBtn.addEventListener('click', () => aboutModal.open(aboutBtn));
+aboutClose.addEventListener('click', () => aboutModal.close());
+
+/* "Click me →" hint */
+(function () {
+  var HINT_KEY     = 'revspecs-fab-hint-seen';
+  var AUTO_HIDE_MS = 9000;
+
+  var hint = document.getElementById('fabHint');
+  if (!hint) return;
+
+  try {
+    if (localStorage.getItem(HINT_KEY) === '1') { hint.remove(); return; }
+  } catch (e) {}
+
+  var dismissed = false;
+
+  function dismiss() {
+    if (dismissed) return;
+    dismissed = true;
+    hint.classList.add('is-hidden');
+    setTimeout(function () { hint.remove(); }, 400);
+    try { localStorage.setItem(HINT_KEY, '1'); } catch (e) {}
+  }
+
+  var timer = setTimeout(dismiss, AUTO_HIDE_MS);
+
+  aboutBtn.addEventListener('click', function () {
+    clearTimeout(timer);
+    dismiss();
+  }, { once: true });
+})();
+
+/* Dark mode toggle */
+const THEME_KEY = 'revspecs-theme';
+const themeToggle = document.getElementById('themeToggle');
+
+function applyTheme(theme){
+  if (theme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    themeToggle.setAttribute('aria-checked', 'true');
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    themeToggle.setAttribute('aria-checked', 'false');
+  }
+}
+
+applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
+
+themeToggle.addEventListener('click', () => {
+  const next = themeToggle.getAttribute('aria-checked') === 'true' ? 'light' : 'dark';
+  applyTheme(next);
+  try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+});
+
+/* Cross-tab theme sync */
+window.addEventListener('storage', function (e) {
+  if (e.key !== 'revspecs-theme') return;
+  applyTheme(e.newValue === 'dark' ? 'dark' : 'light');
+});
+
+/* Background music */
+(function () {
+  var MUSIC_KEY = 'revspecs-music-on';
+  var VOLUME    = 0.35;
+
+  var btn = document.getElementById('musicToggle');
+  var bgm = document.getElementById('bgm');
+  if (!btn || !bgm) return;
+
+  bgm.volume = VOLUME;
+
+  function syncUI() {
+    var playing = !bgm.paused && !bgm.ended;
+    btn.setAttribute('aria-checked', playing ? 'true' : 'false');
+  }
+
+  bgm.addEventListener('play',  syncUI);
+  bgm.addEventListener('pause', syncUI);
+  bgm.addEventListener('ended', syncUI);
+
+  function play() {
+    var p = bgm.play();
+    if (p && p.catch) p.catch(function () {});
+  }
+  function pause() { bgm.pause(); }
+
+  syncUI();
+
+  try {
+    if (localStorage.getItem(MUSIC_KEY) === '1') play();
+  } catch (e) {}
+
+  btn.addEventListener('click', function () {
+    if (bgm.paused) play(); else pause();
+    try {
+      localStorage.setItem(MUSIC_KEY, bgm.paused ? '0' : '1');
+    } catch (e) {}
+  });
+})();
+
+/* Parallax background animation */
+(function () {
+  const stage = document.getElementById('parallaxStage');
+  if (!stage) return;
+
+  const STAGE_W = 320;
+  const STAGE_H = 178;
+
+  function fitStage() {
+    const scale = Math.max(window.innerWidth / STAGE_W, window.innerHeight / STAGE_H);
+    stage.style.setProperty('--scale', scale);
+  }
+
+  window.addEventListener('resize', fitStage);
+  fitStage();
+
+  const layers = Array.from(document.querySelectorAll('.parallax-layer')).map(el => ({
+    el,
+    speed: parseFloat(el.dataset.speed) || 0,
+    tile: parseFloat(el.dataset.tile) || 0,
+    offset: 0
+  }));
+
+  let last = performance.now();
+
+  function tick(now) {
+    const dt = (now - last) / 1000;
+    last = now;
+
+    for (const layer of layers) {
+      if (layer.tile > 0) {
+        layer.offset = (layer.offset + layer.speed * dt) % layer.tile;
+      }
+      layer.el.style.backgroundPositionX = (-layer.offset).toFixed(2) + 'px';
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+})();
+</script>
 </body>
 </html>
