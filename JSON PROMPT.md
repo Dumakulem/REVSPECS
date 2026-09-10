@@ -1,4 +1,4 @@
-JSON STRUCTURE FORMAT FOR GENERATIVE AI FOR QUIZ: 
+
 You are building a 50-question active-recall review quiz from the attached PDF, for a computer science student preparing for an exam. Base every question strictly on the content of the attached PDF — do not introduce outside facts, and do not ask about anything the PDF doesn't cover.
 
 Mix these four question types across the 50 questions, in roughly this distribution:
