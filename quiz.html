@@ -5,13 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RevSpecs — AI Quiz</title>
 <script>
-  /* Same theme-init as the rest of the site — applied before first paint. */
   (function () {
     try {
       var stored = localStorage.getItem('revspecs-theme');
       var wantsDark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (wantsDark) document.documentElement.setAttribute('data-theme', 'dark');
-    } catch (e) { /* localStorage unavailable — default to light */ }
+    } catch (e) {}
   })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -182,7 +181,6 @@
   .blank-input.input-correct{ border-bottom-color: var(--y2); color: var(--y2); }
   .blank-input.input-incorrect{ border-bottom-color: var(--wrong); color: var(--wrong); }
 
-  /* Identification uses the same input style but as its own full-width field */
   .answer-area .blank-input{ max-width: none; border: 2px solid var(--line); border-radius: var(--radius); padding: 11px 14px; margin: 0; }
   .answer-area .blank-input:focus{ border-color: var(--y1); }
 
@@ -220,16 +218,85 @@
   .results-pct{ font-size: 1.2rem; color: var(--ink-soft); font-weight: 400; }
   .results-label{ margin: 0 0 22px; color: var(--ink-soft); }
 
-  .review-title{ font-family:'Roboto Condensed', sans-serif; font-size: 1rem; margin: 0 0 12px; padding-top: 16px; border-top: 1px solid var(--line); }
+  /* ---------- Native <details> review dropdown ---------- */
+  .review-details{
+    border-top: 1px solid var(--line);
+    margin-top: 6px;
+    padding-top: 4px;
+  }
+
+  .review-summary{
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    padding: 14px 0 12px;
+    user-select: none;
+    transition: color 0.15s ease;
+  }
+  .review-summary::-webkit-details-marker,
+  .review-summary::marker { display: none; content: ''; }
+  .review-summary:hover{ color: var(--y1); }
+  .review-summary:focus-visible{
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+    border-radius: var(--radius);
+  }
+
+  .review-chevron{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--line);
+    color: var(--ink);
+    font-size: 0.7rem;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: transform 0.22s ease, background-color 0.15s ease, color 0.15s ease;
+  }
+  .review-details[open] .review-chevron{
+    transform: rotate(180deg);
+    background: var(--y2);
+    color: #fff;
+  }
+
+  .review-content{
+    padding: 4px 0 8px;
+    animation: reviewFade 0.22s ease;
+  }
+  @keyframes reviewFade{
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
   .review-row{ padding: 14px 0; border-top: 1px solid var(--line); }
-  .review-row:first-of-type{ border-top: none; }
+  .review-row:first-child{ border-top: none; padding-top: 4px; }
   .review-q{ font-weight: 500; margin: 0 0 6px; }
   .review-line{ margin: 0 0 3px; font-size: 0.88rem; }
   .review-wrong{ color: var(--wrong); font-weight: 700; }
   .review-right{ color: var(--y2); font-weight: 700; }
   .review-explanation{ margin: 6px 0 0; font-size: 0.85rem; color: var(--ink-soft); }
 
-  @media (prefers-reduced-motion: reduce){ *{ transition: none !important; } }
+  /* Shown when there are zero missed answers */
+  .review-perfect{
+    margin: 0;
+    padding: 4px 0 8px;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; animation: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -484,11 +551,36 @@
     labelEl.textContent = resultsRemark(pct);
     card.appendChild(labelEl);
 
+    /* ---- Native <details> dropdown for missed answers ---- */
+    const details = document.createElement('details');
+    details.className = 'review-details';
+
+    const summary = document.createElement('summary');
+    summary.className = 'review-summary';
+
+    const summaryText = document.createElement('span');
+    summaryText.className = 'review-summary-text';
+    summary.appendChild(summaryText);
+
+    const chevron = document.createElement('span');
+    chevron.className = 'review-chevron';
+    chevron.setAttribute('aria-hidden', 'true');
+    chevron.textContent = '▼';
+    summary.appendChild(chevron);
+
+    details.appendChild(summary);
+
+    const content = document.createElement('div');
+    content.className = 'review-content';
+
     if (missed.length) {
-      const reviewTitle = document.createElement('h2');
-      reviewTitle.className = 'review-title';
-      reviewTitle.textContent = `Review (${missed.length} missed)`;
-      card.appendChild(reviewTitle);
+      summaryText.textContent = `Show missed answers (${missed.length})`;
+
+      details.addEventListener('toggle', () => {
+        summaryText.textContent = details.open
+          ? `Hide missed answers (${missed.length})`
+          : `Show missed answers (${missed.length})`;
+      });
 
       missed.forEach(m => {
         const row = document.createElement('div');
@@ -522,9 +614,19 @@
         explEl.textContent = m.explanation;
         row.appendChild(explEl);
 
-        card.appendChild(row);
+        content.appendChild(row);
       });
+
+    } else {
+      summaryText.textContent = 'Review answers';
+      const perfect = document.createElement('p');
+      perfect.className = 'review-perfect';
+      perfect.textContent = '✓ Perfect score — nothing to review.';
+      content.appendChild(perfect);
     }
+
+    details.appendChild(content);
+    card.appendChild(details);
 
     const retakeBtn = document.createElement('button');
     retakeBtn.type = 'button';
