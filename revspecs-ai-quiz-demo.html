@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RevSpecs — AI Quiz Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #FFFFFF;
+    --panel: #FFFFFF;
+    --ink: #1B4332;
+    --ink-soft: #5C8374;
+    --line: #CDE8D5;
+    --y1: #E67E22; /* orange */
+    --y2: #27AE60; /* green */
+    --y3: #D35400; /* burnt orange */
+    --bad: #C0392B;
+    --radius: 3px;
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Roboto', sans-serif; line-height:1.5;
+  }
+  .wrap{ max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
+  header{
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 16px; margin-bottom: 28px;
+  }
+  h1{
+    font-family:'Roboto Condensed', sans-serif; font-weight:700;
+    font-size: 1.9rem; margin: 0 0 6px;
+  }
+  .tagline{ color: var(--ink-soft); font-size: 0.92rem; margin:0; }
+
+  .controls{ display:flex; gap: 10px; align-items:center; margin-bottom: 24px; flex-wrap: wrap; }
+  select, .btn{
+    font-family:'Roboto', sans-serif; font-size: 0.88rem;
+    padding: 10px 16px; border-radius: var(--radius); border: 2px solid var(--line);
+    background: #fff; color: var(--ink); cursor:pointer;
+  }
+  .btn.primary{ background: var(--y1); border-color: var(--y1); color:#fff; font-weight:700; }
+  .btn.primary:hover{ background: #CF6C1B; }
+  .btn:disabled{ opacity:0.5; cursor:not-allowed; }
+
+  .status{ font-size: 0.88rem; color: var(--ink-soft); margin-bottom: 16px; min-height: 1.2em; }
+  .status.error{ color: var(--bad); }
+
+  .card{
+    border: 2px solid var(--line); border-radius: var(--radius);
+    padding: 26px; margin-bottom: 16px;
+  }
+  .card-tag{
+    display:inline-block; font-family:'Roboto Condensed', sans-serif;
+    font-size: 0.72rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
+    color:#fff; background: var(--y2); padding: 2px 10px; border-radius: 3px; margin-bottom: 12px;
+  }
+  .q-text{ font-size: 1.05rem; font-weight:500; margin: 0 0 18px; }
+  .options{ display:flex; flex-direction:column; gap: 10px; }
+  .option{
+    text-align:left; padding: 12px 16px; border: 2px solid var(--line);
+    border-radius: var(--radius); background:#fff; cursor:pointer; font-size: 0.95rem;
+    color: var(--ink); font-family:'Roboto', sans-serif;
+  }
+  .option:hover{ border-color: var(--y1); }
+  .option.correct{ border-color: var(--y2); background:#EAFAF1; }
+  .option.incorrect{ border-color: var(--bad); background:#FDECEA; }
+  .option:disabled{ cursor:default; }
+
+  .explanation{
+    margin-top: 16px; padding: 14px 16px; background: #F3FBF6;
+    border-left: 4px solid var(--y2); font-size: 0.88rem; color: var(--ink-soft); border-radius: var(--radius);
+  }
+
+  .nav-row{ display:flex; justify-content:space-between; align-items:center; margin-top: 6px; }
+  .progress{ font-size: 0.85rem; color: var(--ink-soft); font-family:'Roboto Condensed', sans-serif; }
+
+  .flash-card{
+    min-height: 160px; display:flex; align-items:center; justify-content:center;
+    text-align:center; cursor:pointer; padding: 20px;
+  }
+  .flash-front{ font-size: 1.05rem; font-weight:500; }
+  .flash-back{ display:none; }
+  .flash-card.flipped .flash-front{ display:none; }
+  .flash-card.flipped .flash-back{ display:block; }
+  .flash-hint{ font-size: 0.78rem; color: var(--ink-soft); margin-top: 10px; }
+
+  .score-panel{ text-align:center; padding: 34px 26px; }
+  .score-big{ font-family:'Roboto Condensed', sans-serif; font-size: 2.4rem; font-weight:700; color: var(--y1); }
+
+  footer{ margin-top: 32px; font-size: 0.78rem; color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="pageTitle">RevSpecs — AI Quiz Generator</h1>
+    <p class="tagline" id="pageTagline">Pick a format below.</p>
+  </header>
+
+  <div class="controls">
+    <select id="modeSelect">
+      <option value="quiz">Multiple choice quiz</option>
+      <option value="flashcards">Flashcards</option>
+    </select>
+    <button class="btn primary" id="generateBtn">Generate</button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <div id="output"></div>
+
+  <footer>
+    Reviewer PDFs are uploaded to the server by RevSpecs admins — you're not
+    uploading anything here, just picking a subject (via the link you came
+    from) and a format. Generation happens server-side in generate_quiz.php.
+  </footer>
+</div>
+
+<script>
+  const modeSelect = document.getElementById('modeSelect');
+  const generateBtn = document.getElementById('generateBtn');
+  const statusEl = document.getElementById('status');
+  const outputEl = document.getElementById('output');
+
+  const params = new URLSearchParams(window.location.search);
+  const subject = params.get('subject') || '';
+
+  if (subject){
+    document.getElementById('pageTitle').textContent = `RevSpecs — ${subject} Quiz`;
+    document.getElementById('pageTagline').textContent = `Pick a format for the ${subject} reviewer.`;
+  } else {
+    document.getElementById('pageTagline').textContent = 'No subject specified — open this page from a subject card in RevSpecs.';
+    generateBtn.disabled = true;
+  }
+
+  generateBtn.addEventListener('click', () => generate(modeSelect.value));
+
+  async function generate(mode){
+    generateBtn.disabled = true;
+    statusEl.className = 'status';
+    statusEl.textContent = 'Generating ' + (mode === 'quiz' ? 'quiz' : 'flashcards') + ' from the ' + subject + ' reviewer...';
+    outputEl.innerHTML = '';
+
+    try{
+      // The PHP endpoint looks up which PDF belongs to this subject code,
+      // extracts its text, and calls the AI API — all server-side.
+      const response = await fetch(`generate_quiz.php?subject=${encodeURIComponent(subject)}&mode=${encodeURIComponent(mode)}`);
+      const parsed = await response.json();
+
+      if (parsed.error) throw new Error(parsed.error);
+
+      statusEl.textContent = '';
+      if (mode === 'quiz') renderQuiz(parsed.items);
+      else renderFlashcards(parsed.items);
+    }catch(err){
+      console.error(err);
+      statusEl.className = 'status error';
+      statusEl.textContent = 'Something went wrong generating that — try again in a moment.';
+    }finally{
+      generateBtn.disabled = false;
+    }
+  }
+
+  function renderQuiz(items){
+    let current = 0;
+    let score = 0;
+
+    function showQuestion(){
+      const item = items[current];
+      outputEl.innerHTML = `
+        <div class="card">
+          <span class="card-tag">Question ${current + 1} of ${items.length}</span>
+          <p class="q-text">${item.question}</p>
+          <div class="options">
+            ${item.options.map((opt, i) => `<button class="option" data-i="${i}">${opt}</button>`).join('')}
+          </div>
+          <div class="explanation" id="explBox" style="display:none;"></div>
+          <div class="nav-row">
+            <span class="progress">Score: ${score}/${current}</span>
+            <button class="btn" id="nextBtn" style="display:none;">${current === items.length - 1 ? 'See results' : 'Next question'}</button>
+          </div>
+        </div>
+      `;
+      const optionButtons = outputEl.querySelectorAll('.option');
+      optionButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const chosen = parseInt(btn.dataset.i);
+          optionButtons.forEach(b => b.disabled = true);
+          optionButtons[item.correctIndex].classList.add('correct');
+          if (chosen !== item.correctIndex) btn.classList.add('incorrect');
+          else score++;
+          const explBox = document.getElementById('explBox');
+          explBox.style.display = 'block';
+          explBox.textContent = item.explanation || '';
+          document.getElementById('nextBtn').style.display = 'inline-block';
+          outputEl.querySelector('.progress').textContent = `Score: ${score}/${current + 1}`;
+        });
+      });
+      const next = document.getElementById('nextBtn');
+      next.addEventListener('click', () => {
+        current++;
+        if (current < items.length) showQuestion();
+        else showScore();
+      });
+    }
+
+    function showScore(){
+      outputEl.innerHTML = `
+        <div class="card score-panel">
+          <div class="score-big">${score} / ${items.length}</div>
+          <p>Nice work. Want to go again?</p>
+          <button class="btn primary" id="retryBtn">Retry</button>
+        </div>
+      `;
+      document.getElementById('retryBtn').addEventListener('click', () => generate('quiz'));
+    }
+
+    showQuestion();
+  }
+
+  function renderFlashcards(items){
+    let current = 0;
+
+    function showCard(){
+      const item = items[current];
+      outputEl.innerHTML = `
+        <div class="card">
+          <span class="card-tag">Card ${current + 1} of ${items.length}</span>
+          <div class="flash-card" id="flashCard">
+            <div class="flash-front">${item.front}</div>
+            <div class="flash-back">${item.back}</div>
+          </div>
+          <div class="flash-hint">Click the card to flip</div>
+          <div class="nav-row">
+            <button class="btn" id="prevBtn" ${current === 0 ? 'disabled' : ''}>Previous</button>
+            <button class="btn" id="nextBtn">${current === items.length - 1 ? 'Restart' : 'Next'}</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('flashCard').addEventListener('click', (e) => {
+        e.currentTarget.classList.toggle('flipped');
+      });
+      document.getElementById('prevBtn').addEventListener('click', () => { current--; showCard(); });
+      document.getElementById('nextBtn').addEventListener('click', () => {
+        current = current === items.length - 1 ? 0 : current + 1;
+        showCard();
+      });
+    }
+
+    showCard();
+  }
+</script>
+</body>
+</html>

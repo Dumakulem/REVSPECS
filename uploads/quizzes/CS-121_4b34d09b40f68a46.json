@@ -1,0 +1,515 @@
+{
+    "subject": "Wk4_StudyGuides_MindMaps_Reflection",
+    "items": [
+        {
+            "id": 1,
+            "type": "multiple_choice",
+            "question": "What is the definition of globalization according to the PDF?",
+            "options": [
+                "Growing interconnectedness of countries, economies, and cultures through trade, technology, travel, and communication",
+                "The spread of a single global culture that replaces local traditions",
+                "The dominance of multinational corporations over local businesses",
+                "The elimination of national borders and political sovereignty"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF defines globalization as the growing interconnectedness of countries, economies, and cultures through trade, technology, travel, and communication."
+        },
+        {
+            "id": 2,
+            "type": "fill_blank",
+            "question": "Globalization includes economic, political, cultural, technological, and _____ aspects.",
+            "answer": "social",
+            "acceptableAnswers": [
+                "social"
+            ],
+            "explanation": "The PDF lists social as one of the five dimensions of globalization."
+        },
+        {
+            "id": 3,
+            "type": "true_false",
+            "question": "In a globalized world, communication is instant and cross-border.",
+            "answer": true,
+            "explanation": "The PDF explicitly states that communication is instant and cross-border through video calls, messaging apps, and social media."
+        },
+        {
+            "id": 4,
+            "type": "identification",
+            "question": "What aspect of globalization includes the spread of media, food, fashion, and entertainment?",
+            "answer": "cultural",
+            "acceptableAnswers": [
+                "cultural",
+                "cultural aspect"
+            ],
+            "explanation": "The PDF lists 'Cultural - spread of media, food, fashion, and entertainment' as a type of globalization."
+        },
+        {
+            "id": 5,
+            "type": "multiple_choice",
+            "question": "Which of the following is NOT listed as a type of globalization in the PDF?",
+            "options": [
+                "Economic",
+                "Political",
+                "Environmental",
+                "Social"
+            ],
+            "correctIndex": 2,
+            "explanation": "The PDF lists Economic, Political, Cultural, Technological, and Social aspects; Environmental is not mentioned."
+        },
+        {
+            "id": 6,
+            "type": "fill_blank",
+            "question": "Teams and clients are often geographically distributed, making remote/hybrid work _____ in a globalized context.",
+            "answer": "normal",
+            "acceptableAnswers": [
+                "normal",
+                "common"
+            ],
+            "explanation": "The PDF states that 'remote/hybrid work is normal' due to geographic distribution."
+        },
+        {
+            "id": 7,
+            "type": "true_false",
+            "question": "Miscommunication risk decreases when tone, idioms, or humor don't translate across cultures.",
+            "answer": false,
+            "explanation": "The PDF says miscommunication risk increases when tone, idioms, or humor don't translate."
+        },
+        {
+            "id": 8,
+            "type": "identification",
+            "question": "What language often serves as a bridge language in global communication, though fluency levels vary?",
+            "answer": "English",
+            "acceptableAnswers": [
+                "English"
+            ],
+            "explanation": "The PDF mentions that 'English often serves as a bridge language, but fluency levels vary.'"
+        },
+        {
+            "id": 9,
+            "type": "multiple_choice",
+            "question": "Which communication skill involves using simple, direct language and avoiding idioms or slang?",
+            "options": [
+                "Active listening",
+                "Cultural sensitivity",
+                "Clarity",
+                "Digital literacy"
+            ],
+            "correctIndex": 2,
+            "explanation": "The PDF lists 'Clarity - simple, direct language, avoiding idioms/slang' as a communication skill."
+        },
+        {
+            "id": 10,
+            "type": "fill_blank",
+            "question": "The skill of confirming understanding before responding is called _____ listening.",
+            "answer": "active",
+            "acceptableAnswers": [
+                "active"
+            ],
+            "explanation": "The PDF defines 'Active listening - confirming understanding before responding.'"
+        },
+        {
+            "id": 11,
+            "type": "true_false",
+            "question": "Cultural sensitivity in communication means that norms do not differ by culture.",
+            "answer": false,
+            "explanation": "The PDF states that cultural sensitivity involves 'awareness that norms differ by culture,' so the claim that norms do not differ is false."
+        },
+        {
+            "id": 12,
+            "type": "identification",
+            "question": "What term describes the ability to adjust tone and style to the audience?",
+            "answer": "adaptability",
+            "acceptableAnswers": [
+                "adaptability"
+            ],
+            "explanation": "The PDF lists 'Adaptability - adjusting tone/style to the audience' as a communication skill."
+        },
+        {
+            "id": 13,
+            "type": "multiple_choice",
+            "question": "According to the PDF, which of the following is a core professional skill in the context of globalization?",
+            "options": [
+                "Cross-cultural competence",
+                "Programming in multiple languages",
+                "Project management",
+                "Financial analysis"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF states that 'Cross-cultural competence is now a core professional skill.'"
+        },
+        {
+            "id": 14,
+            "type": "fill_blank",
+            "question": "In tech/IT, open-source collaboration and distributed dev teams make clear communication _____.",
+            "answer": "essential",
+            "acceptableAnswers": [
+                "essential",
+                "important"
+            ],
+            "explanation": "The PDF says that in tech/IT, these factors 'make clear communication essential.'"
+        },
+        {
+            "id": 15,
+            "type": "true_false",
+            "question": "Business communication increasingly follows national norms rather than international norms.",
+            "answer": false,
+            "explanation": "The PDF states that 'Business communication increasingly follows international norms.'"
+        },
+        {
+            "id": 16,
+            "type": "identification",
+            "question": "What is the term for the presence of variety within a group, including differences in ethnicity, gender, age, etc.?",
+            "answer": "diversity",
+            "acceptableAnswers": [
+                "diversity"
+            ],
+            "explanation": "The PDF defines diversity as 'the presence of variety within a group.'"
+        },
+        {
+            "id": 17,
+            "type": "multiple_choice",
+            "question": "Which type of diversity includes race, gender, age, and physical ability?",
+            "options": [
+                "Invisible diversity",
+                "Visible diversity",
+                "Cultural diversity",
+                "Cognitive diversity"
+            ],
+            "correctIndex": 1,
+            "explanation": "The PDF lists 'Visible - race, gender, age, physical ability' as visible diversity."
+        },
+        {
+            "id": 18,
+            "type": "fill_blank",
+            "question": "Diversity that includes beliefs, values, education, thinking styles, and neurodivergence is called _____ diversity.",
+            "answer": "invisible",
+            "acceptableAnswers": [
+                "invisible"
+            ],
+            "explanation": "The PDF lists 'Invisible - beliefs, values, education, thinking styles, neurodivergence.'"
+        },
+        {
+            "id": 19,
+            "type": "true_false",
+            "question": "Multiculturalism expects minority cultures to conform to the majority culture.",
+            "answer": false,
+            "explanation": "The PDF distinguishes multiculturalism from assimilation; multiculturalism encourages distinct identity, not conformity."
+        },
+        {
+            "id": 20,
+            "type": "identification",
+            "question": "What is the term for the coexistence and recognition of multiple cultures within a group or society?",
+            "answer": "multiculturalism",
+            "acceptableAnswers": [
+                "multiculturalism"
+            ],
+            "explanation": "The PDF defines multiculturalism as the coexistence and recognition of multiple cultures."
+        },
+        {
+            "id": 21,
+            "type": "multiple_choice",
+            "question": "Which of the following is NOT listed as a benefit of a diverse and multicultural workforce?",
+            "options": [
+                "Innovation",
+                "Better decision-making",
+                "Increased homogeneity",
+                "Wider market understanding"
+            ],
+            "correctIndex": 2,
+            "explanation": "The PDF lists innovation, better decision-making, wider market understanding, improved satisfaction & retention, and global competitiveness; increased homogeneity is not listed."
+        },
+        {
+            "id": 22,
+            "type": "fill_blank",
+            "question": "Varied perspectives lead to creative problem-solving, which is a benefit of diversity known as _____.",
+            "answer": "innovation",
+            "acceptableAnswers": [
+                "innovation"
+            ],
+            "explanation": "The PDF lists 'Innovation - varied perspectives lead to creative problem-solving.'"
+        },
+        {
+            "id": 23,
+            "type": "true_false",
+            "question": "Diverse teams catch blind spots, leading to better decision-making.",
+            "answer": true,
+            "explanation": "The PDF states 'Better decision-making - diverse teams catch blind spots.'"
+        },
+        {
+            "id": 24,
+            "type": "identification",
+            "question": "What benefit of diversity leads to better adaptation to international markets?",
+            "answer": "global competitiveness",
+            "acceptableAnswers": [
+                "global competitiveness"
+            ],
+            "explanation": "The PDF lists 'Global competitiveness - better adaptation to international markets.'"
+        },
+        {
+            "id": 25,
+            "type": "multiple_choice",
+            "question": "Which issue in diversity refers to superficial inclusion without real influence?",
+            "options": [
+                "Discrimination",
+                "Tokenism",
+                "Exclusion",
+                "Bias"
+            ],
+            "correctIndex": 1,
+            "explanation": "The PDF defines 'Tokenism - superficial inclusion without real influence.'"
+        },
+        {
+            "id": 26,
+            "type": "fill_blank",
+            "question": "Unequal treatment based on group identity is called _____.",
+            "answer": "discrimination",
+            "acceptableAnswers": [
+                "discrimination"
+            ],
+            "explanation": "The PDF lists 'Discrimination - unequal treatment based on group identity.'"
+        },
+        {
+            "id": 27,
+            "type": "true_false",
+            "question": "Communication barriers in diversity are only due to language differences.",
+            "answer": false,
+            "explanation": "The PDF mentions 'Communication barriers - language and norm differences,' indicating norms also play a role."
+        },
+        {
+            "id": 28,
+            "type": "identification",
+            "question": "What term describes conscious or unconscious assumptions about a group?",
+            "answer": "bias",
+            "acceptableAnswers": [
+                "bias",
+                "stereotyping"
+            ],
+            "explanation": "The PDF lists 'Bias and stereotyping - conscious or unconscious assumptions.'"
+        },
+        {
+            "id": 29,
+            "type": "multiple_choice",
+            "question": "Which type of communication involves multiple cultures existing/communicating in the same space without necessarily deep interaction?",
+            "options": [
+                "Intercultural",
+                "Cross-cultural",
+                "Multicultural",
+                "Transcultural"
+            ],
+            "correctIndex": 2,
+            "explanation": "The PDF defines Multicultural as 'multiple cultures existing/communicating in the same space, without necessarily deep interaction.'"
+        },
+        {
+            "id": 30,
+            "type": "fill_blank",
+            "question": "Active, direct exchange between people of different cultures, understanding and adapting to each other, is called _____ communication.",
+            "answer": "intercultural",
+            "acceptableAnswers": [
+                "intercultural"
+            ],
+            "explanation": "The PDF defines Intercultural as 'active, direct exchange between people of different cultures — understanding and adapting to each other.'"
+        },
+        {
+            "id": 31,
+            "type": "true_false",
+            "question": "Cross-cultural communication is used to compare communication styles and norms across different cultures.",
+            "answer": true,
+            "explanation": "The PDF defines Cross-cultural as 'comparing communication styles/norms across different cultures — often used in research/training.'"
+        },
+        {
+            "id": 32,
+            "type": "identification",
+            "question": "What term is often used in research and training to compare communication styles across cultures?",
+            "answer": "cross-cultural",
+            "acceptableAnswers": [
+                "cross-cultural"
+            ],
+            "explanation": "The PDF states that cross-cultural is 'often used in research/training' for comparing communication styles."
+        },
+        {
+            "id": 33,
+            "type": "multiple_choice",
+            "question": "According to the PDF, which approach involves coexisting vs. actively bridging differences?",
+            "options": [
+                "Multicultural vs. intercultural",
+                "Cross-cultural vs. multicultural",
+                "Intercultural vs. cross-cultural",
+                "Diversity vs. multiculturalism"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF says this distinction helps professionals choose the right approach - coexisting (multicultural) vs. actively bridging differences (intercultural)."
+        },
+        {
+            "id": 34,
+            "type": "fill_blank",
+            "question": "Effective communicators adjust tone, formality, and _____ by audience.",
+            "answer": "directness",
+            "acceptableAnswers": [
+                "directness"
+            ],
+            "explanation": "The PDF states that effective communicators adjust tone, formality, and directness by audience."
+        },
+        {
+            "id": 35,
+            "type": "true_false",
+            "question": "Avoiding assumptions and asking clarifying questions reduces misunderstandings.",
+            "answer": true,
+            "explanation": "The PDF says that avoiding assumptions and asking clarifying questions reduces misunderstandings."
+        },
+        {
+            "id": 36,
+            "type": "identification",
+            "question": "What issue occurs when diverse voices are present but not genuinely included?",
+            "answer": "exclusion",
+            "acceptableAnswers": [
+                "exclusion"
+            ],
+            "explanation": "The PDF defines 'Exclusion - diverse voices present but not genuinely included.'"
+        },
+        {
+            "id": 37,
+            "type": "multiple_choice",
+            "question": "Which of the following is an invisible diversity characteristic mentioned in the PDF?",
+            "options": [
+                "Race",
+                "Gender",
+                "Neurodivergence",
+                "Physical ability"
+            ],
+            "correctIndex": 2,
+            "explanation": "The PDF lists invisible diversity as including beliefs, values, education, thinking styles, and neurodivergence; race, gender, and physical ability are visible."
+        },
+        {
+            "id": 38,
+            "type": "fill_blank",
+            "question": "The spread of internet and instant global communication is part of the _____ aspect of globalization.",
+            "answer": "technological",
+            "acceptableAnswers": [
+                "technological"
+            ],
+            "explanation": "The PDF lists 'Technological - internet and instant global communication' as a type of globalization."
+        },
+        {
+            "id": 39,
+            "type": "true_false",
+            "question": "Globalization only affects economic and political systems, not social aspects.",
+            "answer": false,
+            "explanation": "The PDF includes social as one of the dimensions of globalization, so it affects social aspects as well."
+        },
+        {
+            "id": 40,
+            "type": "identification",
+            "question": "What term describes the ability to comfortably use video calls and collaboration tools?",
+            "answer": "digital literacy",
+            "acceptableAnswers": [
+                "digital literacy"
+            ],
+            "explanation": "The PDF lists 'Digital literacy - comfort with video calls and collaboration tools.'"
+        },
+        {
+            "id": 41,
+            "type": "multiple_choice",
+            "question": "Which of the following is a visible diversity characteristic?",
+            "options": [
+                "Beliefs",
+                "Education",
+                "Age",
+                "Thinking style"
+            ],
+            "correctIndex": 2,
+            "explanation": "The PDF lists visible diversity as including race, gender, age, and physical ability; beliefs, education, and thinking styles are invisible."
+        },
+        {
+            "id": 42,
+            "type": "fill_blank",
+            "question": "The process of minority cultures being expected to conform to the majority culture is called _____.",
+            "answer": "assimilation",
+            "acceptableAnswers": [
+                "assimilation"
+            ],
+            "explanation": "The PDF contrasts multiculturalism with assimilation, where assimilation expects minority cultures to conform to the majority."
+        },
+        {
+            "id": 43,
+            "type": "true_false",
+            "question": "In a multicultural workplace, distinct cultural identities are expected to blend into one dominant culture.",
+            "answer": false,
+            "explanation": "The PDF says multiculturalism encourages cultures to retain distinct identity while sharing a community or workplace, not blend."
+        },
+        {
+            "id": 44,
+            "type": "identification",
+            "question": "What benefit of diversity involves better grasp of diverse customers or users?",
+            "answer": "wider market understanding",
+            "acceptableAnswers": [
+                "wider market understanding"
+            ],
+            "explanation": "The PDF lists 'Wider market understanding - better grasp of diverse customers/users.'"
+        },
+        {
+            "id": 45,
+            "type": "multiple_choice",
+            "question": "Which issue refers to unequal access to promotion and leadership?",
+            "options": [
+                "Tokenism",
+                "Pay and opportunity gaps",
+                "Communication barriers",
+                "Exclusion"
+            ],
+            "correctIndex": 1,
+            "explanation": "The PDF lists 'Pay and opportunity gaps - unequal access to promotion/leadership.'"
+        },
+        {
+            "id": 46,
+            "type": "fill_blank",
+            "question": "The issue of unequal access to promotion is called pay and _____ gaps.",
+            "answer": "opportunity",
+            "acceptableAnswers": [
+                "opportunity"
+            ],
+            "explanation": "The PDF lists 'Pay and opportunity gaps - unequal access to promotion/leadership.'"
+        },
+        {
+            "id": 47,
+            "type": "true_false",
+            "question": "Active listening involves confirming understanding before responding.",
+            "answer": true,
+            "explanation": "The PDF defines active listening as 'confirming understanding before responding.'"
+        },
+        {
+            "id": 48,
+            "type": "multiple_choice",
+            "question": "Which term is used for comparing communication styles across cultures?",
+            "options": [
+                "Multicultural",
+                "Intercultural",
+                "Cross-cultural",
+                "Transcultural"
+            ],
+            "correctIndex": 2,
+            "explanation": "The PDF defines cross-cultural as 'comparing communication styles/norms across different cultures.'"
+        },
+        {
+            "id": 49,
+            "type": "multiple_choice",
+            "question": "Which aspect of globalization includes international organizations like the UN and WTO?",
+            "options": [
+                "Economic",
+                "Political",
+                "Cultural",
+                "Technological"
+            ],
+            "correctIndex": 1,
+            "explanation": "The PDF lists 'Political - international organizations and agreements (UN, WTO)' as part of the political aspect."
+        },
+        {
+            "id": 50,
+            "type": "identification",
+            "question": "What term refers to superficial inclusion without real influence?",
+            "answer": "tokenism",
+            "acceptableAnswers": [
+                "tokenism"
+            ],
+            "explanation": "The PDF defines 'Tokenism - superficial inclusion without real influence.'"
+        }
+    ]
+}
