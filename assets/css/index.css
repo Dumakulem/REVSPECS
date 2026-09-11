@@ -42,16 +42,41 @@ h1#revspecsTitle {
 
 h1#revspecsTitle:hover { filter: brightness(1.15); }
 
-.ambient-hint {
+.digital-clock {
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  z-index: 10;
   display: block;
-  font-size: 0.62rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: var(--ink-soft);
-  margin-top: 2px;
-  opacity: 0.75;
-  font-family: 'Roboto', sans-serif;
-  text-transform: uppercase;
+  font: 500 12px/1 'Roboto', sans-serif;
+  letter-spacing: 0.03em;
+  color: #fff;
+  background: rgba(0,0,0,0.35);
+  border: 0;
+  border-radius: 999px;
+  margin: 0;
+  padding: 8px 16px;
+  box-shadow: none;
+  font-variant-numeric: tabular-nums;
+}
+
+body.ambient-active .digital-clock {
+  opacity: 0;
+  transform: none;
+  filter: blur(6px);
+  pointer-events: none;
+  transition-delay: 1s;
+}
+
+body:not(.ambient-active) .digital-clock {
+  transition-delay: 0s;
+}
+
+@media (max-width: 520px) {
+  .digital-clock {
+    left: 16px;
+    bottom: 16px;
+  }
 }
 
 .tagline {
