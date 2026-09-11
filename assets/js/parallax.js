@@ -2,6 +2,20 @@
   const stage = document.getElementById('parallaxStage');
   if (!stage) return;
 
+  function getTimePeriod() {
+    const hour = new Date().getHours();
+    if (hour >= 6 && hour < 15) return 'day';
+    if (hour >= 15 && hour < 18) return 'dusk';
+    return 'night';
+  }
+
+  function updateTimePeriod() {
+    document.documentElement.dataset.timePeriod = getTimePeriod();
+  }
+
+  updateTimePeriod();
+  setInterval(updateTimePeriod, 60000);
+
   const STAGE_W = 320;
   const STAGE_H = 178;
 
