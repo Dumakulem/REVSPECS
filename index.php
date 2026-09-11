@@ -17,6 +17,9 @@ foreach ($subjects as $code => $info) {
     var stored = localStorage.getItem('revspecs-theme');
     var wantsDark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
     if (wantsDark) document.documentElement.setAttribute('data-theme', 'dark');
+    var hour = new Date().getHours();
+    document.documentElement.setAttribute('data-time-period',
+      hour >= 6 && hour < 15 ? 'day' : hour >= 15 && hour < 18 ? 'dusk' : 'night');
   } catch (e) {}
 })();
 </script>
@@ -49,10 +52,10 @@ foreach ($subjects as $code => $info) {
   <header class="ambient-fade">
     <div>
       <h1 id="revspecsTitle" title="Click for ambient mode">RevSpecs</h1>
-      <span class="ambient-hint"></span>
     </div>
     <p class="tagline">SPECS reviewer library, sorted by year. Pick a subject to open its set.</p>
   </header>
+  <time class="digital-clock ambient-fade" id="digitalClock" aria-label="Current time">00:00:00</time>
 
   <div class="tabs ambient-fade" role="tablist" aria-label="Select year level">
     <button class="tab" role="tab" data-year="1" aria-selected="true">1st Year</button>
