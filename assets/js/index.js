@@ -5,6 +5,20 @@
   const tabs = document.querySelectorAll('.tab');
   const panel = document.getElementById('panel');
   const grid = document.getElementById('subjectGrid');
+  const digitalClock = document.getElementById('digitalClock');
+
+  function updateClock() {
+    if (!digitalClock) return;
+    digitalClock.textContent = new Intl.DateTimeFormat(undefined, {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).format(new Date());
+  }
+
+  updateClock();
+  if (digitalClock) setInterval(updateClock, 1000);
 
   let YEARS = {};
   const dataEl = document.getElementById('yearsData');
