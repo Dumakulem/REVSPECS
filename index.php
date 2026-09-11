@@ -692,6 +692,87 @@
     overflow-x: auto;
   }
 }
+
+/* ============================================================
+   Ambient / fullscreen mode — triggered by clicking the
+   "RevSpecs" title. Hides all UI so only the parallax
+   background + music remain, with a dramatic staggered fade.
+   ============================================================ */
+h1#revspecsTitle{
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+h1#revspecsTitle:hover{
+  filter: brightness(1.15);
+}
+
+.ambient-hint{
+  display:block;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  margin-top: 2px;
+  opacity: 0.75;
+  font-family:'Roboto', sans-serif;
+  text-transform: uppercase;
+}
+
+/* Elements that participate in the fade-out. Each gets its own
+   delay (set below via body.ambient-active selectors) so the
+   page dissolves piece by piece rather than all at once. */
+.ambient-fade{
+  transition: opacity 0.7s cubic-bezier(.4,0,.2,1),
+              transform 0.7s cubic-bezier(.4,0,.2,1),
+              filter 0.7s ease;
+}
+
+body.ambient-active .ambient-fade{
+  opacity: 0;
+  transform: translateY(-10px) scale(0.98);
+  filter: blur(6px);
+  pointer-events: none;
+  transition-delay: 1s;
+}
+
+body:not(.ambient-active) .ambient-fade{
+  transition-delay: 0s;
+}
+
+body.ambient-active{ cursor: none; }
+body.ambient-active .wrap{ pointer-events: none; }
+
+/* Small "press to return" hint that fades in once ambient mode
+   has settled, and out the moment it's dismissed. */
+.ambient-exit-hint{
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%) translateY(6px);
+  color: #fff;
+  font: 500 12px/1 'Roboto', sans-serif;
+  letter-spacing: 0.03em;
+  background: rgba(0,0,0,0.35);
+  padding: 8px 16px;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease 2s, transform 0.6s ease 2s;
+  z-index: 50;
+}
+
+body.ambient-active .ambient-exit-hint{
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .ambient-fade,
+  .ambient-exit-hint{ transition: opacity 0.2s linear !important; }
+  body.ambient-active .ambient-fade{ filter: none; transform: none; }
+}
 </style>
 </head>
 <body>
@@ -708,36 +789,42 @@
 </div>
 
 <div class="wrap">
-  <header>
-    <h1>RevSpecs</h1>
+  <header class="ambient-fade">
+    <div>
+      <h1 id="revspecsTitle" title="Click for ambient mode">RevSpecs</h1>
+      <span class="ambient-hint"></span>
+    </div>
     <p class="tagline">SPECS reviewer library, sorted by year. Pick a subject to open its set.</p>
   </header>
 
-  <div class="tabs" role="tablist" aria-label="Select year level">
+  <div class="tabs ambient-fade" role="tablist" aria-label="Select year level">
     <button class="tab" role="tab" data-year="1" aria-selected="true">1st Year</button>
     <button class="tab" role="tab" data-year="2" aria-selected="false">2nd Year</button>
     <button class="tab" role="tab" data-year="3" aria-selected="false">3rd Year</button>
   </div>
 
-  <div class="panel" data-year="1" id="panel">
+  <div class="panel ambient-fade" data-year="1" id="panel">
     <div class="panel-year-bar" data-year="1"></div>
     <p class="panel-instruction">Click a subject and choose between a reviewer or a quiz.</p>
     <div class="subject-grid" id="subjectGrid"></div>
   </div>
 
-  <footer>
+  <footer class="ambient-fade">
     RevSpecs A.Y. 2026 - 2027 — built for Gordon College BSCS Students.
     <p class="credit">Developed and Proposed by Perez, Emilio James — 2nd Year Representative.</p>
   </footer>
 </div>
 
 <!-- Floating About button -->
-<button class="about-fab" id="aboutBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="aboutOverlay">
+<button class="about-fab ambient-fade" id="aboutBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="aboutOverlay">
   <img src="specsLogo.png" class="about-fab-img" alt="SPECS logo">
 </button>
 
 <!-- "Click me →" hint that points at the FAB above -->
-<span class="fab-hint" id="fabHint" aria-hidden="true">Click me&nbsp;→</span>
+<span class="fab-hint ambient-fade" id="fabHint" aria-hidden="true">Click me&nbsp;→</span>
+
+<!-- Ambient mode exit hint -->
+<span class="ambient-exit-hint" id="ambientExitHint" aria-hidden="true">pahinga ka muna, and enjoy the view :)</span>
 
 <div class="about-overlay" id="aboutOverlay" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" hidden>
   <div class="about-modal">
@@ -1093,12 +1180,88 @@
       if (localStorage.getItem(MUSIC_KEY) === '1') play();
     } catch (e) {}
 
-    btn.addEventListener('click', function () {
+        btn.addEventListener('click', function () {
       if (bgm.paused) play(); else pause();
       try {
         localStorage.setItem(MUSIC_KEY, bgm.paused ? '0' : '1');
       } catch (e) {}
     });
+
+    /* Expose control so ambient mode can drive the music too. */
+    window.revspecsMusic = {
+      play: function () {
+        play();
+        try { localStorage.setItem(MUSIC_KEY, '1'); } catch (e) {}
+      },
+      pause: function () {
+        pause();
+        try { localStorage.setItem(MUSIC_KEY, '0'); } catch (e) {}
+      },
+      isPlaying: function () { return !bgm.paused && !bgm.ended; }
+    };
+  })();
+
+  /* ============================================================
+     Ambient / fullscreen mode
+     Click "RevSpecs" title -> everything else fades out in a
+     staggered dissolve, leaving only the parallax scene + music.
+     Click anywhere (or Esc) to bring the UI back.
+     ============================================================ */
+  (function () {
+    var titleEl   = document.getElementById('revspecsTitle');
+    if (!titleEl) return;
+
+    var active = false;
+
+    function enterAmbient() {
+  		if (active) return;
+  		active = true;
+  		document.body.classList.add('ambient-active');
+  if (window.revspecsMusic) window.revspecsMusic.play();
+        
+  var el = document.documentElement;
+  var req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+  if (req) {
+    var p = req.call(el);
+    if (p && p.catch) p.catch(function () { /* user or browser denied — fine */ });
+  }
+}
+
+    function exitAmbient() {
+      if (!active) return;
+      active = false;
+      document.body.classList.remove('ambient-active');
+        
+        
+       if (document.fullscreenElement || document.webkitFullscreenElement) {
+    var ex = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+    if (ex) {
+      var p = ex.call(document);
+      if (p && p.catch) p.catch(function () {});
+    }
+  }
+    }
+
+    titleEl.addEventListener('click', function (e) {
+      e.stopPropagation();
+      enterAmbient();
+    });
+
+    // Clicking anywhere on the page while ambient brings the UI back.
+    document.addEventListener('click', function () {
+      if (active) exitAmbient();
+    });
+
+        document.addEventListener('keydown', function (e) {
+      if (active && e.key === 'Escape') exitAmbient();
+    });
+
+    function onFullscreenChange() {
+      var inFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      if (!inFs && active) exitAmbient();
+    }
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
   })();
 </script>
 
