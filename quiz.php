@@ -10,6 +10,9 @@
     var stored = localStorage.getItem('revspecs-theme');
     var wantsDark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
     if (wantsDark) document.documentElement.setAttribute('data-theme', 'dark');
+    var hour = new Date().getHours();
+    document.documentElement.setAttribute('data-time-period',
+      hour >= 6 && hour < 15 ? 'day' : hour >= 15 && hour < 18 ? 'dusk' : 'night');
   } catch (e) {}
 })();
 </script>
