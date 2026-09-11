@@ -1,0 +1,519 @@
+{
+    "subject": "OOP",
+    "items": [
+        {
+            "id": 1,
+            "type": "multiple_choice",
+            "question": "What is Object-Oriented Programming (OOP) according to the PDF?",
+            "options": [
+                "Programming methodology that defines objects rather than functions and logic",
+                "Programming methodology that defines functions and logic rather than objects",
+                "A way to design databases using tables and rows",
+                "A markup language for structuring web pages"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF defines OOP as a programming methodology that defines objects rather than functions and logic."
+        },
+        {
+            "id": 2,
+            "type": "fill_blank",
+            "question": "An object is an instance of a _____.",
+            "answer": "class",
+            "acceptableAnswers": [
+                "class"
+            ],
+            "explanation": "The PDF states that an object is an instance of a class."
+        },
+        {
+            "id": 3,
+            "type": "true_false",
+            "question": "A class is a blueprint for defining an object.",
+            "answer": true,
+            "explanation": "The PDF defines a class as a blueprint for defining an object."
+        },
+        {
+            "id": 4,
+            "type": "identification",
+            "question": "What keyword is used to inherit from a class?",
+            "answer": "extends",
+            "acceptableAnswers": [
+                "extends"
+            ],
+            "explanation": "The PDF lists inheritance and states that it uses extends."
+        },
+        {
+            "id": 5,
+            "type": "multiple_choice",
+            "question": "What is a method?",
+            "options": [
+                "Behavior defined by a piece of Java class, grouping statements to perform an operation",
+                "A variable declared outside a method",
+                "An address of an object's memory location",
+                "A collection of related classes and interfaces"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF defines a method as behavior defined by a piece of Java class and as a collection of statements grouped together to perform an operation."
+        },
+        {
+            "id": 6,
+            "type": "fill_blank",
+            "question": "A _____ is a list of variables in a method declaration.",
+            "answer": "parameter",
+            "acceptableAnswers": [
+                "parameter",
+                "parameters"
+            ],
+            "explanation": "The PDF defines a parameter as the list of variables in a method declaration."
+        },
+        {
+            "id": 7,
+            "type": "true_false",
+            "question": "An argument is the actual value that is passed.",
+            "answer": true,
+            "explanation": "The PDF defines an argument as the actual value that is passed."
+        },
+        {
+            "id": 8,
+            "type": "identification",
+            "question": "What term describes variables declared outside the method?",
+            "answer": "instance variables",
+            "acceptableAnswers": [
+                "instance variables",
+                "instance variable"
+            ],
+            "explanation": "The PDF states that instance variables are variables declared outside the method."
+        },
+        {
+            "id": 9,
+            "type": "multiple_choice",
+            "question": "What is the mechanism for restricting access to components?",
+            "options": [
+                "Information hiding",
+                "Encapsulation",
+                "Inheritance",
+                "Polymorphism"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF defines information hiding as a mechanism for restricting access."
+        },
+        {
+            "id": 10,
+            "type": "fill_blank",
+            "question": "A(n) _____ returns data from a private instance variable.",
+            "answer": "accessor",
+            "acceptableAnswers": [
+                "accessor",
+                "getter"
+            ],
+            "explanation": "The PDF defines an accessor as returning data from a private instance variable."
+        },
+        {
+            "id": 11,
+            "type": "true_false",
+            "question": "A mutator changes the data stored in one or more private instance variables.",
+            "answer": true,
+            "explanation": "The PDF defines a mutator as changing the data stored in one or more private instance variables."
+        },
+        {
+            "id": 12,
+            "type": "identification",
+            "question": "What term describes combining data and actions into a single item?",
+            "answer": "encapsulation",
+            "acceptableAnswers": [
+                "encapsulation"
+            ],
+            "explanation": "The PDF defines encapsulation as combining data and actions into a single item."
+        },
+        {
+            "id": 13,
+            "type": "multiple_choice",
+            "question": "What does a UML Class Diagram display?",
+            "options": [
+                "Class name, variables, and methods",
+                "Object addresses, method calls, and packages",
+                "Only instance variables",
+                "Only public methods"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF states that a UML Class Diagram describes the structure of a class by displaying the class name, variables, and methods."
+        },
+        {
+            "id": 14,
+            "type": "fill_blank",
+            "question": "Class types are _____ types, so instead of == use equals().",
+            "answer": "reference",
+            "acceptableAnswers": [
+                "reference"
+            ],
+            "explanation": "The PDF states that class types are reference types and that instead of == you should use equals()."
+        },
+        {
+            "id": 15,
+            "type": "true_false",
+            "question": "A constructor has a return type.",
+            "answer": false,
+            "explanation": "The PDF states that a constructor does not have a return type."
+        },
+        {
+            "id": 16,
+            "type": "identification",
+            "question": "What keyword is used to create and initialize an object?",
+            "answer": "new",
+            "acceptableAnswers": [
+                "new"
+            ],
+            "explanation": "The PDF states that a constructor uses the new keyword to create and initialize an object."
+        },
+        {
+            "id": 17,
+            "type": "multiple_choice",
+            "question": "Which statement about static variables is correct?",
+            "options": [
+                "They are shared by all objects of its class",
+                "They are unique to each object",
+                "They are always constants",
+                "They cannot be public or private"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF states that static variables are shared by all objects of its class."
+        },
+        {
+            "id": 18,
+            "type": "fill_blank",
+            "question": "A static method can be invoked without using any _____.",
+            "answer": "objects",
+            "acceptableAnswers": [
+                "objects",
+                "object"
+            ],
+            "explanation": "The PDF defines a static method as a method that can be invoked without using any objects."
+        },
+        {
+            "id": 19,
+            "type": "true_false",
+            "question": "A static method can reference an instance variable of the class.",
+            "answer": false,
+            "explanation": "The PDF states that a static method cannot reference an instance variable of the class."
+        },
+        {
+            "id": 20,
+            "type": "multiple_choice",
+            "question": "Which predefined Math class method returns the absolute value of a number?",
+            "options": [
+                "Math.abs()",
+                "Math.pow()",
+                "Math.max()",
+                "Math.sqrt()"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF lists absolute value as Math.abs()."
+        },
+        {
+            "id": 21,
+            "type": "multiple_choice",
+            "question": "Overloading occurs when multiple methods have the same name within the same class but differ in what?",
+            "options": [
+                "The method definitions, such as the number and types of parameters",
+                "The class name only",
+                "The package name only",
+                "The access modifier only"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF states that overloading is when multiple methods have the same name within the same class, done by having different method definitions and signatures."
+        },
+        {
+            "id": 22,
+            "type": "fill_blank",
+            "question": "A method's signature consists of its name and the number and types of its _____.",
+            "answer": "parameters",
+            "acceptableAnswers": [
+                "parameters",
+                "parameter"
+            ],
+            "explanation": "The PDF defines a signature as the method name and the number and types of its parameters."
+        },
+        {
+            "id": 23,
+            "type": "true_false",
+            "question": "A derived class inherits constructors from the base class.",
+            "answer": false,
+            "explanation": "The PDF states that a subclass does not inherit any constructors from the base class."
+        },
+        {
+            "id": 24,
+            "type": "identification",
+            "question": "What is another name for a derived class?",
+            "answer": "subclass",
+            "acceptableAnswers": [
+                "subclass"
+            ],
+            "explanation": "The PDF states that a derived class is also called a subclass."
+        },
+        {
+            "id": 25,
+            "type": "multiple_choice",
+            "question": "What is method overriding?",
+            "options": [
+                "A derived class defines a method with the same name, same number and types of parameters, and same return type as a method in the base class",
+                "Multiple methods have the same name within the same class",
+                "A class inherits constructors from the base class",
+                "A method is declared without an implementation"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF defines override as when a derived class defines a method with the same name, same number and types of parameters, and same return type as a method in the base class."
+        },
+        {
+            "id": 26,
+            "type": "fill_blank",
+            "question": "In a constructor definition, the first action is often a call to _____.",
+            "answer": "super",
+            "acceptableAnswers": [
+                "super"
+            ],
+            "explanation": "The PDF states that super is the first action in a constructor definition."
+        },
+        {
+            "id": 27,
+            "type": "true_false",
+            "question": "Polymorphism allows a base class reference to refer to a derived class object.",
+            "answer": true,
+            "explanation": "The PDF states that polymorphism allows a base class reference to be used to refer to a derived class object."
+        },
+        {
+            "id": 28,
+            "type": "identification",
+            "question": "What mechanism allows many meanings to be associated to one method name and binds the method definition at run time?",
+            "answer": "dynamic binding",
+            "acceptableAnswers": [
+                "dynamic binding"
+            ],
+            "explanation": "The PDF defines dynamic binding as allowing many meanings to be associated to one method name and not binding the definition until run time."
+        },
+        {
+            "id": 29,
+            "type": "multiple_choice",
+            "question": "What is an abstract method?",
+            "options": [
+                "A method declared as abstract and does not have an implementation, written without braces followed by a semicolon",
+                "A method that returns no value",
+                "A method that can be invoked without an object",
+                "A method that changes private instance variables"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF defines an abstract method as declared abstract and not having an implementation, written without braces followed by a semicolon."
+        },
+        {
+            "id": 30,
+            "type": "fill_blank",
+            "question": "An abstract class is a base for _____.",
+            "answer": "subclasses",
+            "acceptableAnswers": [
+                "subclasses",
+                "subclass"
+            ],
+            "explanation": "The PDF states that an abstract class is a base for subclasses."
+        },
+        {
+            "id": 31,
+            "type": "true_false",
+            "question": "An interface contains the heading for a number of public methods.",
+            "answer": true,
+            "explanation": "The PDF defines an interface as a program component that contains the heading for a number of public methods."
+        },
+        {
+            "id": 32,
+            "type": "identification",
+            "question": "What keyword is used by a class to implement an interface?",
+            "answer": "implements",
+            "acceptableAnswers": [
+                "implements"
+            ],
+            "explanation": "The PDF lists interface and states implements."
+        },
+        {
+            "id": 33,
+            "type": "multiple_choice",
+            "question": "What is a package?",
+            "options": [
+                "A collection of related classes and interfaces",
+                "A collection of related objects only",
+                "A method that returns no value",
+                "A variable shared by all objects"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF defines a package as a collection of related classes and interfaces."
+        },
+        {
+            "id": 34,
+            "type": "fill_blank",
+            "question": "The name of the folder equals the name of the _____.",
+            "answer": "package",
+            "acceptableAnswers": [
+                "package"
+            ],
+            "explanation": "The PDF states that the name of the folder equals the name of the package."
+        },
+        {
+            "id": 35,
+            "type": "true_false",
+            "question": "A void method is used to return a value.",
+            "answer": false,
+            "explanation": "The PDF states that void means a method is not used to return a value."
+        },
+        {
+            "id": 36,
+            "type": "identification",
+            "question": "What term refers to the object's name receiving the method call?",
+            "answer": "this",
+            "acceptableAnswers": [
+                "this"
+            ],
+            "explanation": "The PDF defines this as the object's name receiving the method call."
+        },
+        {
+            "id": 37,
+            "type": "multiple_choice",
+            "question": "What does a private instance variable mean?",
+            "options": [
+                "Its name cannot be used to access it outside a class",
+                "It has no restriction where you can use its name",
+                "It can be invoked anywhere without restriction",
+                "It is shared by all objects of its class"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF states that a private instance variable's name cannot be used to access it outside a class."
+        },
+        {
+            "id": 38,
+            "type": "fill_blank",
+            "question": "A public method can be invoked _____ without restriction.",
+            "answer": "anywhere",
+            "acceptableAnswers": [
+                "anywhere"
+            ],
+            "explanation": "The PDF states that a public method can be invoked anywhere without restriction."
+        },
+        {
+            "id": 39,
+            "type": "true_false",
+            "question": "Encapsulation hides implementation details.",
+            "answer": true,
+            "explanation": "The PDF states that encapsulation groups instance variables and methods into a class and hides implementation details."
+        },
+        {
+            "id": 40,
+            "type": "identification",
+            "question": "What is the address of an object's memory location called?",
+            "answer": "reference",
+            "acceptableAnswers": [
+                "reference"
+            ],
+            "explanation": "The PDF defines a reference as the address of the object's memory location."
+        },
+        {
+            "id": 41,
+            "type": "multiple_choice",
+            "question": "Which predefined Math class method is used for rounding?",
+            "options": [
+                "Math.round()",
+                "Math.ceil()",
+                "Math.floor()",
+                "Math.random()"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF lists rounding as Math.round()."
+        },
+        {
+            "id": 42,
+            "type": "fill_blank",
+            "question": "Math.pow() is used for _____.",
+            "answer": "power",
+            "acceptableAnswers": [
+                "power",
+                "exponent"
+            ],
+            "explanation": "The PDF lists power as Math.pow()."
+        },
+        {
+            "id": 43,
+            "type": "true_false",
+            "question": "Static variables are constants.",
+            "answer": false,
+            "explanation": "The PDF states that static variables are not constants."
+        },
+        {
+            "id": 44,
+            "type": "identification",
+            "question": "What term describes multiple methods having the same name within the same class?",
+            "answer": "overloading",
+            "acceptableAnswers": [
+                "overloading"
+            ],
+            "explanation": "The PDF defines overloading as when multiple methods have the same name within the same class."
+        },
+        {
+            "id": 45,
+            "type": "multiple_choice",
+            "question": "What is inheritance?",
+            "options": [
+                "The use of an existing class to define a new class",
+                "Combining data and actions into a single item",
+                "Restricting access to components",
+                "Invoking a method without using any object"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF defines inheritance as the use of an existing class to define a new class."
+        },
+        {
+            "id": 46,
+            "type": "fill_blank",
+            "question": "A derived class adds instance variables and methods to an existing class, which is called the _____ class.",
+            "answer": "base",
+            "acceptableAnswers": [
+                "base",
+                "superclass"
+            ],
+            "explanation": "The PDF defines a base class as the existing class that the derived class is built upon."
+        },
+        {
+            "id": 47,
+            "type": "true_false",
+            "question": "The super keyword must be the first action in a constructor definition.",
+            "answer": true,
+            "explanation": "The PDF states that super is the first action in a constructor definition."
+        },
+        {
+            "id": 48,
+            "type": "identification",
+            "question": "What is the ability of an object to take on many forms?",
+            "answer": "polymorphism",
+            "acceptableAnswers": [
+                "polymorphism"
+            ],
+            "explanation": "The PDF defines polymorphism as the ability of an object to take on many forms."
+        },
+        {
+            "id": 49,
+            "type": "multiple_choice",
+            "question": "Which statement about a constructor is correct?",
+            "options": [
+                "It creates and initializes an object and uses the new keyword",
+                "It must have a return type",
+                "It cannot call methods within its class",
+                "It is inherited by every subclass"
+            ],
+            "correctIndex": 0,
+            "explanation": "The PDF states that a constructor creates and initializes an object, uses the new keyword, does not have a return type, and can call methods within its class."
+        },
+        {
+            "id": 50,
+            "type": "identification",
+            "question": "What type of method is declared as abstract and does not have an implementation?",
+            "answer": "abstract method",
+            "acceptableAnswers": [
+                "abstract method"
+            ],
+            "explanation": "The PDF defines an abstract method as declared abstract and not having an implementation."
+        }
+    ]
+}

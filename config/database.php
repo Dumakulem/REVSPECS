@@ -2,10 +2,10 @@
 // RevSpecs database connection.
 // XAMPP defaults: host=127.0.0.1, user=root, password is usually empty.
 
-define('DB_HOST', '127.0.0.1');
-define('DB_NAME', 'revspecs');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_HOST', 'sql309.infinityfree.com');
+define('DB_NAME', 'if0_42875884_revspecs');
+define('DB_USER', 'if0_42875884');
+define('DB_PASS', 'WpnbyHLNU5');
 
 function db(): PDO {
     static $pdo = null;

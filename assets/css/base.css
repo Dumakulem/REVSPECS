@@ -1,0 +1,70 @@
+@font-face {
+  font-family: 'OutlinePixel7';
+  src: url('../../Fonts/outline_pixel-7.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --ink: #1B4332;
+  --ink-soft: #5C8374;
+  --line: #CDE8D5;
+  --y1: #E67E22;
+  --y1-dark: #CF6C1B;
+  --y2: #27AE60;
+  --y2-dark: #219150;
+  --y3: #D35400;
+  --wrong: #C0392B;
+  --radius: 3px;
+  --shadow-tint: 0, 0, 0;
+  --overlay-tint: 27, 67, 50;
+  --about-panel: #c0ffca;
+  --about-text: #245c33;
+  --toggle-text: #517a51;
+  --panel-heading: #10291b;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --ink: #E9F5EE;
+  --ink-soft: #93BCA9;
+  --line: #2A4638;
+  --y1: #F0964C;
+  --y1-dark: #E67E22;
+  --y2: #35C97A;
+  --y2-dark: #27AE60;
+  --y3: #EC711C;
+  --wrong: #E85C4A;
+  --overlay-tint: 0, 0, 0;
+  --about-panel: #16281F;
+  --about-text: #E9F5EE;
+  --panel-heading: #E9F5EE;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body { min-height: 100%; }
+
+body {
+  margin: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+body.modal-open { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

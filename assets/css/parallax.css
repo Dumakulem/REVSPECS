@@ -1,0 +1,50 @@
+.parallax-bg {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+  background: #000;
+}
+
+.parallax-stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 320px;
+  height: 178px;
+  transform-origin: center center;
+  transform: translate(-50%, -50%) scale(var(--scale, 1));
+}
+
+.parallax-layer {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background-repeat: repeat-x;
+  image-rendering: pixelated;
+  pointer-events: none;
+  will-change: background-position;
+  backface-visibility: hidden;
+}
+
+.layer-sky {
+  top: 0;
+  height: 200px;
+  background-image: url("../../Day/background_1_day.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+.layer-clouds-back  { bottom: 0; height: 120px; background-image: url("../../Day/background_2_day.png"); z-index: 2; }
+.layer-clouds-front { bottom: 0; height: 115px; background-image: url("../../Day/background_3_day.png"); z-index: 3; }
+.layer-water        { bottom: 0; height: 70px;  background-image: url("../../Day/background_5_day.png"); z-index: 4; }
+.layer-terrain      { bottom: 0; height: 89px;  background-image: url("../../Day/background_4_day.png"); z-index: 5; }
+.layer-grass        { bottom: 0; height: 40px;  background-image: url("../../Day/background_6_day.png"); z-index: 6; }
+
+[data-theme="dark"] .layer-sky          { background-image: url("../../Night/background_1_night.png"); }
+[data-theme="dark"] .layer-clouds-back  { background-image: url("../../Night/background_2_night.png"); }
+[data-theme="dark"] .layer-clouds-front { background-image: url("../../Night/background_3_night.png"); }
+[data-theme="dark"] .layer-water        { background-image: url("../../Night/background_5_night.png"); }
+[data-theme="dark"] .layer-terrain      { background-image: url("../../Night/background_4_night.png"); }
+[data-theme="dark"] .layer-grass        { background-image: url("../../Night/background_6_night.png"); }

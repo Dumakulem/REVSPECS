@@ -1,0 +1,534 @@
+{
+    "subject": "Data Structures and Algorithms",
+    "items": [
+        {
+            "id": 1,
+            "type": "multiple_choice",
+            "question": "According to the module, what are the two main measures for the efficiency of an algorithm?",
+            "options": [
+                "Processor and memory",
+                "Complexity and capacity",
+                "Time and space",
+                "Data and space"
+            ],
+            "correctIndex": 2,
+            "explanation": "The efficiency of an algorithm is classified based on the relative amount of time or space it requires, known as time complexity and space complexity."
+        },
+        {
+            "id": 2,
+            "type": "multiple_choice",
+            "question": "Which asymptotic notation specifically describes the best-case scenario and represents the lower bound running time?",
+            "options": [
+                "Big-O notation",
+                "Theta notation",
+                "Omega notation",
+                "Log-linear notation"
+            ],
+            "correctIndex": 2,
+            "explanation": "Omega notation (Ω) specifically describes the best-case scenario, representing the lower bound running time complexity of an algorithm."
+        },
+        {
+            "id": 3,
+            "type": "multiple_choice",
+            "question": "Which of the following Java Math methods returns the smallest integer that is greater than or equal to the argument?",
+            "options": [
+                "Math.floor()",
+                "Math.ceil()",
+                "Math.round()",
+                "Math.abs()"
+            ],
+            "correctIndex": 1,
+            "explanation": "The ceil function (Math.ceil) returns the smallest integer that is greater than or equal to the specified double precision number."
+        },
+        {
+            "id": 4,
+            "type": "multiple_choice",
+            "question": "In the format conventions for algorithms described in the module, how is the name of every algorithm written?",
+            "options": [
+                "In lowercase letters",
+                "In capital letters",
+                "Enclosed in square brackets",
+                "Enclosed in round parentheses"
+            ],
+            "correctIndex": 1,
+            "explanation": "Every algorithm is given an identifying name written entirely in capital letters, such as GREATEST."
+        },
+        {
+            "id": 5,
+            "type": "multiple_choice",
+            "question": "Which property of an algorithm states that it must always terminate after a finite number of steps?",
+            "options": [
+                "Definiteness",
+                "Effectiveness",
+                "Finiteness",
+                "Input"
+            ],
+            "correctIndex": 2,
+            "explanation": "Finiteness means that an algorithm must always terminate after executing a finite number of steps."
+        },
+        {
+            "id": 6,
+            "type": "multiple_choice",
+            "question": "What does Big-O notation specifically describe?",
+            "options": [
+                "The best-case scenario",
+                "The average-case scenario",
+                "The worst-case scenario",
+                "The exact asymptotic behavior"
+            ],
+            "correctIndex": 2,
+            "explanation": "Big-O notation (O) specifically describes the worst-case scenario, representing the upper bound running time complexity of an algorithm."
+        },
+        {
+            "id": 7,
+            "type": "multiple_choice",
+            "question": "Which Java Math class method returns the absolute value of the argument?",
+            "options": [
+                "Math.round()",
+                "Math.abs()",
+                "Math.floor()",
+                "Math.max()"
+            ],
+            "correctIndex": 1,
+            "explanation": "Math.abs returns the non-negative absolute value of the argument without regard to its sign."
+        },
+        {
+            "id": 8,
+            "type": "multiple_choice",
+            "question": "Among the following algorithmic time complexities, which one has the best (fastest) computing time?",
+            "options": [
+                "O(N)",
+                "O(N^2)",
+                "O(2^N)",
+                "O(100 log N)"
+            ],
+            "correctIndex": 3,
+            "explanation": "Following the growth hierarchy O(1) < O(log n) < O(n) < O(n log n) < O(n^2) < O(2^n), logarithmic growth like O(100 log N) scales much better than linear O(N) or polynomial O(N^2) for large inputs."
+        },
+        {
+            "id": 9,
+            "type": "multiple_choice",
+            "question": "What is the primary function of the 'exitloop' statement in algorithmic notation?",
+            "options": [
+                "To terminate the entire algorithm immediately from anywhere",
+                "To cause an immediate, unconditional exit from a single loop level",
+                "To unconditionally jump to a specified step number",
+                "To skip the current iteration and move to the next loop step"
+            ],
+            "correctIndex": 1,
+            "explanation": "The exitloop statement causes an immediate, unconditional exit from a loop, applying to only one level at a time."
+        },
+        {
+            "id": 10,
+            "type": "multiple_choice",
+            "question": "Which algorithmic property requires that each step must be precisely defined and rigorously specified for each case without ambiguity?",
+            "options": [
+                "Finiteness",
+                "Effectiveness",
+                "Definiteness",
+                "Output"
+            ],
+            "correctIndex": 2,
+            "explanation": "Definiteness means each step must be rigorously and unambiguously specified for every case."
+        },
+        {
+            "id": 11,
+            "type": "multiple_choice",
+            "question": "What does Theta notation (Θ) represent in algorithm analysis?",
+            "options": [
+                "Only the upper bound of an algorithm",
+                "Only the lower bound of an algorithm",
+                "Both the upper and lower bounds, defining exact asymptotic behavior",
+                "The absolute minimum running time for any input"
+            ],
+            "correctIndex": 2,
+            "explanation": "Theta notation describes both the upper bound and lower bound of an algorithm, thereby defining its exact asymptotic behavior."
+        },
+        {
+            "id": 12,
+            "type": "multiple_choice",
+            "question": "According to the Java Math class methods table, what argument types does Math.min accept?",
+            "options": [
+                "Only double",
+                "Double and float only",
+                "Double, float, int, and long",
+                "Only int and long"
+            ],
+            "correctIndex": 2,
+            "explanation": "Both Math.min and Math.max accept double, float, int, and long arguments."
+        },
+        {
+            "id": 13,
+            "type": "multiple_choice",
+            "question": "What does the modulo operator (%) return when executed in programming languages like Java?",
+            "options": [
+                "The quotient of the division",
+                "The integer result rounded up",
+                "The remainder of two numbers",
+                "The absolute difference between two numbers"
+            ],
+            "correctIndex": 2,
+            "explanation": "The modulo operator (%) is an arithmetic operator that divides one operand by another and returns the remainder."
+        },
+        {
+            "id": 14,
+            "type": "multiple_choice",
+            "question": "Which of the following expressions correctly orders asymptotic growth from smallest to largest according to the module?",
+            "options": [
+                "O(1) < O(log n) < O(n) < O(n log n) < O(n^2)",
+                "O(n) < O(log n) < O(1) < O(n^2) < O(n log n)",
+                "O(1) < O(n) < O(log n) < O(n^2) < O(n log n)",
+                "O(log n) < O(1) < O(n) < O(n^2) < O(n log n)"
+            ],
+            "correctIndex": 0,
+            "explanation": "The complete growth hierarchy listed in the module is O(1) < O(log n) < O(n) < O(n log n) < O(n^2) < O(n^3) < O(2^n) < O(n!)."
+        },
+        {
+            "id": 15,
+            "type": "fill_blank",
+            "question": "An algorithm is defined as a sequence of computational steps that transform the input into the _____.",
+            "answer": "output",
+            "acceptableAnswers": [
+                "output",
+                "outputs"
+            ],
+            "explanation": "An algorithm is formally described as a sequence of computational steps that transform input into output."
+        },
+        {
+            "id": 16,
+            "type": "fill_blank",
+            "question": "In algorithm format conventions, an algorithm step may terminate with a comment enclosed in _____ parentheses to help the reader.",
+            "answer": "round",
+            "acceptableAnswers": [
+                "round",
+                "circular"
+            ],
+            "explanation": "Comments in steps are enclosed in round parentheses, whereas abbreviated step descriptions use square brackets."
+        },
+        {
+            "id": 17,
+            "type": "fill_blank",
+            "question": "The asymptotic notation that specifically describes the worst-case scenario and upper bound running time is _____ notation.",
+            "answer": "Big-O",
+            "acceptableAnswers": [
+                "Big-O",
+                "Big O",
+                "O"
+            ],
+            "explanation": "Big-O notation specifically describes the worst-case scenario by representing the upper bound running time complexity."
+        },
+        {
+            "id": 18,
+            "type": "fill_blank",
+            "question": "The running time of a program as a function of the size of the input is known as time _____.",
+            "answer": "complexity",
+            "acceptableAnswers": [
+                "complexity"
+            ],
+            "explanation": "Time complexity measures the running time of a program as a function of input size."
+        },
+        {
+            "id": 19,
+            "type": "fill_blank",
+            "question": "Traversing a 2D array typically exhibits a time complexity of _____.",
+            "answer": "O(n^2)",
+            "acceptableAnswers": [
+                "O(n^2)",
+                "O(n*n)",
+                "O(n squared)"
+            ],
+            "explanation": "Traversing a 2D array involves nested operations resulting in O(n^2) performance where performance is directly proportional to the square of the input size."
+        },
+        {
+            "id": 20,
+            "type": "fill_blank",
+            "question": "The Math class method in Java used to find the square root of a double or int value is _____.",
+            "answer": "sqrt",
+            "acceptableAnswers": [
+                "sqrt",
+                "sqrt()"
+            ],
+            "explanation": "The sqrt(double s) method of the Math class finds the square root of a value."
+        },
+        {
+            "id": 21,
+            "type": "fill_blank",
+            "question": "The Java Math class method that returns the largest integer less than or equal to the argument is _____.",
+            "answer": "floor",
+            "acceptableAnswers": [
+                "floor",
+                "Math.floor"
+            ],
+            "explanation": "The floor function gets the greatest value that is less than or equal to the specified number."
+        },
+        {
+            "id": 22,
+            "type": "fill_blank",
+            "question": "In variable naming conventions for algorithms, variable names cannot contain blanks and all letters must be _____.",
+            "answer": "capitalized",
+            "acceptableAnswers": [
+                "capitalized",
+                "caps",
+                "upper case",
+                "uppercase"
+            ],
+            "explanation": "Variable names must begin with a letter, contain no blanks, and have all letters capitalized."
+        },
+        {
+            "id": 23,
+            "type": "fill_blank",
+            "question": "The property of an algorithm which specifies that all operations must be sufficiently basic to be done exactly in a finite length of time is called _____.",
+            "answer": "effectiveness",
+            "acceptableAnswers": [
+                "effectiveness"
+            ],
+            "explanation": "Effectiveness means all operations to be performed must be sufficiently basic to be done exactly in a finite length of time."
+        },
+        {
+            "id": 24,
+            "type": "fill_blank",
+            "question": "The amount of computer memory required during program execution as a function of input size is called space _____.",
+            "answer": "complexity",
+            "acceptableAnswers": [
+                "complexity"
+            ],
+            "explanation": "Space complexity measures the amount of computer memory required during program execution based on input size."
+        },
+        {
+            "id": 25,
+            "type": "fill_blank",
+            "question": "The Java Math class method used to find the cube root of a double or int value is _____.",
+            "answer": "cbrt",
+            "acceptableAnswers": [
+                "cbrt",
+                "cbrt()"
+            ],
+            "explanation": "The cbrt(double c) method of the Math class is used to find the cube root."
+        },
+        {
+            "id": 26,
+            "type": "fill_blank",
+            "question": "The arithmetic operator represented by the percent sign (%) in Java is also known as the modulus or _____ operator.",
+            "answer": "remainder",
+            "acceptableAnswers": [
+                "remainder"
+            ],
+            "explanation": "The % operator is known as the modulus or remainder operator because it returns the remainder of division."
+        },
+        {
+            "id": 27,
+            "type": "true_false",
+            "question": "An algorithm must always have at least one input.",
+            "answer": false,
+            "explanation": "According to the properties of algorithms, an algorithm has zero or more inputs."
+        },
+        {
+            "id": 28,
+            "type": "true_false",
+            "question": "The 'go to' statement causes an unconditional transfer of control to the referenced step.",
+            "answer": true,
+            "explanation": "A go to statement causes unconditional transfer of control to a referenced step regardless of loop or conditional completion."
+        },
+        {
+            "id": 29,
+            "type": "true_false",
+            "question": "Big-O notation specifically describes the best-case scenario of an algorithm.",
+            "answer": false,
+            "explanation": "Big-O notation describes the worst-case scenario (upper bound), whereas Omega notation describes the best-case scenario."
+        },
+        {
+            "id": 30,
+            "type": "true_false",
+            "question": "Blanks are permitted within a variable name in the algorithmic notation presented in the module.",
+            "answer": false,
+            "explanation": "Blanks are explicitly not permitted within a variable name, and all letters must be capitalized."
+        },
+        {
+            "id": 31,
+            "type": "true_false",
+            "question": "Omega notation represents the lower bound running time complexity of an algorithm.",
+            "answer": true,
+            "explanation": "Omega notation (Ω) represents the lower bound running time complexity, indicating the minimum time an algorithm will take."
+        },
+        {
+            "id": 32,
+            "type": "true_false",
+            "question": "Comments enclosed in round parentheses within algorithm steps specify executable actions.",
+            "answer": false,
+            "explanation": "Comments specify no action and are included solely for clarity to help the reader understand a step."
+        },
+        {
+            "id": 33,
+            "type": "true_false",
+            "question": "The execution of an algorithm always begins at step 1 unless specified otherwise by a tested condition or transfer statement.",
+            "answer": true,
+            "explanation": "Algorithm execution begins at step 1 and continues sequentially unless a condition or transfer statement specifies otherwise."
+        },
+        {
+            "id": 34,
+            "type": "true_false",
+            "question": "Theta notation defines the exact asymptotic behavior by describing both the upper and lower bounds.",
+            "answer": true,
+            "explanation": "Theta notation bounds an algorithm from both above and below, thus defining its exact asymptotic behavior."
+        },
+        {
+            "id": 35,
+            "type": "true_false",
+            "question": "Accessing an array index such as arr[5] has a Big-O complexity of O(n).",
+            "answer": false,
+            "explanation": "Accessing a specific array index executes in the same time regardless of input size, which corresponds to O(1) complexity."
+        },
+        {
+            "id": 36,
+            "type": "true_false",
+            "question": "The exit statement is used to terminate an algorithm and can cause immediate termination even in midstream.",
+            "answer": true,
+            "explanation": "An exit statement causes immediate termination of an algorithm and can be used to terminate execution in midstream when conditions are met."
+        },
+        {
+            "id": 37,
+            "type": "true_false",
+            "question": "Mathematical functions like ceil and floor are only used in theoretical mathematics and have no equivalent in computer programming languages.",
+            "answer": false,
+            "explanation": "Ceil and floor functions are widely used in computer science across spreadsheets, databases, and languages like Java, C, C++, and Python."
+        },
+        {
+            "id": 38,
+            "type": "true_false",
+            "question": "The Java Math class methods sqrt and cbrt are static and can be called directly using the class name without creating an object.",
+            "answer": true,
+            "explanation": "Both sqrt and cbrt methods are static methods of the Math class and can be invoked directly through the class name."
+        },
+        {
+            "id": 39,
+            "type": "identification",
+            "question": "What is the name of the Java class (including its package) that provides methods for exponential, logarithmic, roots, and trigonometric operations?",
+            "answer": "java.lang.Math",
+            "acceptableAnswers": [
+                "java.lang.Math",
+                "Math"
+            ],
+            "explanation": "Java provides the java.lang.Math class to handle mathematical functions without needing hard-coded lookup tables."
+        },
+        {
+            "id": 40,
+            "type": "identification",
+            "question": "Which asymptotic notation represents the average complexity of an algorithm?",
+            "answer": "Theta notation",
+            "acceptableAnswers": [
+                "Theta notation",
+                "Theta",
+                "Θ notation",
+                "Theta Notation (Θ)"
+            ],
+            "explanation": "Theta notation represents the average complexity where the running time lies between the best and worst cases."
+        },
+        {
+            "id": 41,
+            "type": "identification",
+            "question": "What type of algorithmic growth is represented by Big-O notation O(1)?",
+            "answer": "Constant time",
+            "acceptableAnswers": [
+                "Constant time",
+                "Constant",
+                "O(1)"
+            ],
+            "explanation": "O(1) represents constant time complexity, executing in the same time regardless of input size."
+        },
+        {
+            "id": 42,
+            "type": "identification",
+            "question": "In the algorithmic notation sample GREATEST, what variable name is used to store the largest algebraic element of vector A?",
+            "answer": "MAX",
+            "acceptableAnswers": [
+                "MAX"
+            ],
+            "explanation": "In algorithm GREATEST, MAX holds the largest algebraic element of the vector."
+        },
+        {
+            "id": 43,
+            "type": "identification",
+            "question": "What algorithmic property ensures that an algorithm must always terminate after a finite number of steps?",
+            "answer": "Finiteness",
+            "acceptableAnswers": [
+                "Finiteness"
+            ],
+            "explanation": "Finiteness is the property ensuring an algorithm stops after a finite number of steps."
+        },
+        {
+            "id": 44,
+            "type": "identification",
+            "question": "Which asymptotic notation specifically describes the best-case scenario and lower bound?",
+            "answer": "Omega notation",
+            "acceptableAnswers": [
+                "Omega notation",
+                "Omega",
+                "Ω notation"
+            ],
+            "explanation": "Omega notation (Ω) describes the best-case scenario and lower bound running time."
+        },
+        {
+            "id": 45,
+            "type": "identification",
+            "question": "What specific Big-O notation represents an algorithm whose performance grows linearly in direct proportion to the size of the input data?",
+            "answer": "O(n)",
+            "acceptableAnswers": [
+                "O(n)",
+                "Linear"
+            ],
+            "explanation": "O(n) represents linear growth where performance scales directly with input size."
+        },
+        {
+            "id": 46,
+            "type": "identification",
+            "question": "What is the result of the Java expression Math.min(23, 17)?",
+            "answer": "17",
+            "acceptableAnswers": [
+                "17"
+            ],
+            "explanation": "Math.min returns the smaller of two integer values, which is 17."
+        },
+        {
+            "id": 47,
+            "type": "identification",
+            "question": "What is the result of evaluating the modulo expression 10 % 3?",
+            "answer": "1",
+            "acceptableAnswers": [
+                "1"
+            ],
+            "explanation": "10 divided by 3 leaves a remainder of 1, so 10 % 3 evaluates to 1."
+        },
+        {
+            "id": 48,
+            "type": "identification",
+            "question": "What term refers to expressions used to represent the complexity and growth of time or space requirements of an algorithm?",
+            "answer": "Asymptotic notations",
+            "acceptableAnswers": [
+                "Asymptotic notations",
+                "Asymptotic notation"
+            ],
+            "explanation": "Asymptotic notations are expressions used to represent the time and space complexity of an algorithm as input size grows."
+        },
+        {
+            "id": 49,
+            "type": "identification",
+            "question": "What format convention is used to enclose the abbreviated description phrase at the beginning of each algorithm step?",
+            "answer": "Square brackets",
+            "acceptableAnswers": [
+                "Square brackets",
+                "Brackets"
+            ],
+            "explanation": "Each algorithm step begins with a phrase enclosed in square brackets giving an abbreviated description of that step."
+        },
+        {
+            "id": 50,
+            "type": "identification",
+            "question": "What is the result of the Java expression Math.max(-12, -29)?",
+            "answer": "-12",
+            "acceptableAnswers": [
+                "-12"
+            ],
+            "explanation": "Math.max returns the greater of two values closer to positive infinity, making -12 greater than -29."
+        }
+    ]
+}
