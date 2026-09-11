@@ -1,178 +1,362 @@
-<?php
-define('ASSET_VER', '1.0.0');
-$subjects = include 'subjects-config.php';
-$subjectCode = $_GET['subject'] ?? '';
-$subject = $subjects[$subjectCode] ?? null;
-?><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RevSpecs — <?php echo htmlspecialchars($subject['name'] ?? 'Reviewer'); ?></title>
-    <script>
-    (function () {
+(function () {
+  if (typeof pdfjsLib === 'undefined') {
+    document.getElementById('pdfContainer').innerHTML =
+      '<div class="status error">PDF library failed to load. Please refresh the page.</div>';
+    return;
+  }
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  const PDF_PATH = window.REVIEWER_PDF_PATH;
+
+  let isMobile = window.innerWidth <= 768;
+  const DPR = window.devicePixelRatio || 1;
+  let pdfDoc = null;
+  let currentPage = 1;
+  let zoomLevel = 1;
+  const pageCanvases = new Map();
+  const loadingPages = new Set();
+  const container = document.getElementById('pdfContainer');
+  const statusEl = document.getElementById('status');
+
+  const fullscreenTarget = document.querySelector('.container');
+  let pseudoFullscreen = false;
+
+  const ICON_EXPAND =
+    '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" ' +
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/>' +
+    '<path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+  const ICON_COMPRESS =
+    '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" ' +
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M16 3v3a2 2 0 0 0 2 2h3"/>' +
+    '<path d="M8 21v-3a2 2 0 0 0-2-2H3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
+
+  function currentFsElement() {
+    return document.fullscreenElement || document.webkitFullscreenElement || null;
+  }
+
+  function isFullscreenActive() {
+    return !!currentFsElement() || pseudoFullscreen;
+  }
+
+  function setControlsHidden(hidden) {
+    fullscreenTarget.classList.toggle('fs-idle', !!hidden);
+  }
+
+  function updateFullscreenUI() {
+    const active = isFullscreenActive();
+
+    document.querySelectorAll('.fs-icon').forEach(el => {
+      el.innerHTML = active ? ICON_COMPRESS : ICON_EXPAND;
+    });
+
+    const label = document.getElementById('fullscreenLabel');
+    if (label) label.textContent = active ? 'Exit' : 'Fullscreen';
+
+    document.querySelectorAll('.fs-btn').forEach(btn => {
+      btn.title = active ? 'Exit fullscreen' : 'Enter fullscreen';
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  }
+
+  function enterPseudoFullscreen() {
+    pseudoFullscreen = true;
+    document.body.classList.add('pseudo-fullscreen');
+    updateFullscreenUI();
+    scheduleRelayout(50);
+  }
+
+  function exitPseudoFullscreen() {
+    pseudoFullscreen = false;
+    document.body.classList.remove('pseudo-fullscreen');
+    setControlsHidden(false);
+    updateFullscreenUI();
+    scheduleRelayout(50);
+  }
+
+  async function toggleFullscreen() {
+    if (pseudoFullscreen) { exitPseudoFullscreen(); return; }
+
+    const fsEl = currentFsElement();
+    if (fsEl) {
       try {
-        var stored = localStorage.getItem('revspecs-theme');
-        var wantsDark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (wantsDark) document.documentElement.setAttribute('data-theme', 'dark');
-      } catch (e) {}
-    })();
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <meta name="theme-color" id="themeColorMeta" content="#FFFFFF">
-    <link rel="stylesheet" href="assets/css/base.css?v=<?= ASSET_VER ?>">
-    <link rel="stylesheet" href="assets/css/parallax.css?v=<?= ASSET_VER ?>">
-    <link rel="stylesheet" href="assets/css/fab.css?v=<?= ASSET_VER ?>">
-    <link rel="stylesheet" href="assets/css/reviewer.css?v=<?= ASSET_VER ?>">
-</head>
-<body>
+        if (document.exitFullscreen) await document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      } catch (err) {
+        console.warn('Exit fullscreen failed:', err);
+      }
+      return;
+    }
 
-<div class="parallax-bg">
-    <div class="parallax-stage" id="parallaxStage">
-        <div class="parallax-layer layer-sky"          data-speed="0" data-tile="320"></div>
-        <div class="parallax-layer layer-clouds-back"  data-speed="2" data-tile="160"></div>
-        <div class="parallax-layer layer-clouds-front" data-speed="3" data-tile="160"></div>
-        <div class="parallax-layer layer-water"        data-speed="4" data-tile="172"></div>
-        <div class="parallax-layer layer-terrain"      data-speed="4" data-tile="172"></div>
-        <div class="parallax-layer layer-grass"        data-speed="6" data-tile="151"></div>
-    </div>
-</div>
+    const request = fullscreenTarget.requestFullscreen || fullscreenTarget.webkitRequestFullscreen;
+    if (!request) { enterPseudoFullscreen(); return; }
 
-<div class="container">
-    <div class="mobile-toolbar" id="mobileToolbar">
-        <a href="index.php" class="back-btn">←</a>
-        <span class="title"><?php echo htmlspecialchars($subject['name'] ?? 'Reviewer'); ?></span>
-        <span class="page-indicator" id="mobilePageIndicator">1/1</span>
-        <?php if ($subject): ?>
-        <button type="button" class="icon-btn fs-btn" id="mobileFullscreenBtn"
-                aria-label="Toggle fullscreen" aria-pressed="false" title="Enter fullscreen">
-            <span class="fs-icon"></span>
-        </button>
-        <?php endif; ?>
-    </div>
+    try {
+      const result = fullscreenTarget.requestFullscreen
+        ? fullscreenTarget.requestFullscreen({ navigationUI: 'hide' })
+        : fullscreenTarget.webkitRequestFullscreen();
+      if (result && typeof result.then === 'function') await result;
+    } catch (err) {
+      console.warn('Native fullscreen unavailable, using fallback:', err);
+      enterPseudoFullscreen();
+    }
+  }
 
-    <a class="back-link" href="index.php">&larr; Back to RevSpecs</a>
-    <header>
-        <h1><?php echo htmlspecialchars($subject['name'] ?? 'Reviewer not found'); ?></h1>
-        <p class="tagline">
-            <?php echo $subject ? 'Scroll through the pages or use the navigation controls.' : 'That subject code isn\'t in subjects-config.php.'; ?>
-        </p>
-    </header>
+  ['fullscreenchange', 'webkitfullscreenchange'].forEach(evt => {
+    document.addEventListener(evt, () => {
+      updateFullscreenUI();
+      if (!isFullscreenActive()) setControlsHidden(false);
+      scheduleRelayout(100);
+    });
+  });
 
-    <div class="viewer-card">
-        <?php if (!$subject): ?>
-            <div class="status error">
-                No reviewer found for "<?php echo htmlspecialchars($subjectCode); ?>".<br>
-                <span style="font-size:0.85rem;">Check the subject code against subjects-config.php.</span>
-            </div>
-        <?php else: ?>
-            <div class="toolbar" id="desktopToolbar">
-                <div class="toolbar-left">
-                    <a href="index.php" class="btn toolbar-back" title="Back to RevSpecs">← Back</a>
-                    <button class="btn" id="prevBtn">← Prev</button>
-                    <span>Page <strong id="currentPageNum">1</strong> of <span id="totalPages">?</span></span>
-                    <button class="btn" id="nextBtn">Next →</button>
-                </div>
-                <div class="toolbar-right">
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <button class="btn" id="zoomOut">−</button>
-                        <span id="zoomLabel" style="min-width:40px; text-align:center;">100%</span>
-                        <button class="btn" id="zoomIn">+</button>
-                    </div>
-                    <button class="btn fs-toggle fs-btn" id="fullscreenBtn" type="button"
-                            aria-pressed="false" title="Enter fullscreen">
-                        <span class="fs-icon"></span><span id="fullscreenLabel">Fullscreen</span>
-                    </button>
-                    <button class="btn fs-hide-toggle" id="hideToolbarBtn" type="button" title="Hide controls">
-                        <span aria-hidden="true">▲</span> Hide
-                    </button>
-                    <a href="<?php echo htmlspecialchars($subject['pdf']); ?>" download class="download-btn-desktop">⬇ Download</a>
-                </div>
-            </div>
+  updateFullscreenUI();
 
-            <div id="pdfContainer">
-                <div class="status" id="status">Loading reviewer...</div>
-            </div>
+  let resizeTimer = null;
+  function scheduleRelayout(delay) {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (!pdfDoc) return;
+      isMobile = window.innerWidth <= 768;
+      pageCanvases.clear();
+      loadingPages.clear();
+      container.innerHTML = '';
+      renderPage(currentPage).then(() => {
+        scrollToPage(currentPage);
+        renderPage(currentPage + 1);
+      });
+    }, delay || 300);
+  }
 
-            <div class="jump-row">
-                Jump to page
-                <input type="number" id="jumpInput" min="1" value="1">
-                <button class="btn" id="jumpBtn">Go</button>
-            </div>
-        <?php endif; ?>
-    </div>
+  const loadTimeout = setTimeout(() => {
+    if (!pdfDoc) {
+      container.innerHTML =
+        '<div class="status error">Loading timed out. The PDF may be unavailable or the path is incorrect.</div>';
+    }
+  }, 15000);
 
-    <footer>
-        RevSpecs · Reviewer PDFs are uploaded by SPECS officers, not students.
-    </footer>
+  async function init() {
+    try {
+      pdfDoc = await pdfjsLib.getDocument(PDF_PATH).promise;
+      clearTimeout(loadTimeout);
 
-    <div class="mobile-controls" id="mobileControls">
-        <button class="nav-btn" id="mobilePrevBtn">←</button>
-        <button class="zoom-btn" id="mobileZoomOut">−</button>
-        <button class="zoom-btn" id="mobileZoomIn">+</button>
-        <a href="<?php echo $subject ? htmlspecialchars($subject['pdf']) : '#'; ?>" download class="download-btn">⬇ PDF</a>
-        <button class="nav-btn" id="mobileNextBtn">→</button>
-    </div>
+      document.getElementById('totalPages').textContent = pdfDoc.numPages;
+      document.getElementById('jumpInput').max = pdfDoc.numPages;
+      document.getElementById('mobilePageIndicator').textContent = `1/${pdfDoc.numPages}`;
 
-    <button class="fs-show-bar" id="showToolbarBtn" type="button" aria-label="Show controls">
-        <span aria-hidden="true">▼</span> Show controls
-    </button>
-</div>
+      await renderPage(1);
+      if (statusEl) statusEl.remove();
+      renderPage(2);
+      renderPage(3);
 
-<button class="about-fab" id="aboutBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="aboutOverlay">
-  <img src="specsLogo.png" class="about-fab-img" alt="SPECS logo">
-</button>
+      setupEventListeners();
+      updatePageIndicator(1);
+    } catch (err) {
+      console.error(err);
+      clearTimeout(loadTimeout);
+      container.innerHTML = `<div class="status error">Failed to load PDF: ${err.message || 'Please check the file path.'}</div>`;
+    }
+  }
 
-<span class="fab-hint" id="fabHint" aria-hidden="true">Click me&nbsp;→</span>
+  async function renderPage(pageNum) {
+    if (pageNum > pdfDoc.numPages || pageCanvases.has(pageNum) || loadingPages.has(pageNum)) return;
+    loadingPages.add(pageNum);
 
-<div class="about-overlay" id="aboutOverlay" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" hidden>
-  <div class="about-modal">
-    <button class="about-modal-close" id="aboutClose" aria-label="Close">&times;</button>
-    <h2 id="aboutTitle">Gordon College &amp; SPECS</h2>
-    <p>The Society of Programming Enthusiasts in Computer Science (SPECS) is an organization under the GCCCS</p>
+    const pageDiv = document.createElement('div');
+    pageDiv.className = 'pdf-page';
+    pageDiv.id = `page-${pageNum}`;
+    pageDiv.dataset.pageNum = pageNum;
+    pageDiv.innerHTML = '<div class="page-loading">Loading page ' + pageNum + '...</div>';
+    container.appendChild(pageDiv);
 
-    <div class="theme-toggle-row">
-      <span class="theme-toggle-label" id="themeToggleLabel">Dark mode</span>
-      <button class="theme-toggle" id="themeToggle" role="switch" aria-checked="false" aria-labelledby="themeToggleLabel">
-        <span class="theme-toggle-thumb"></span>
-      </button>
-    </div>
+    try {
+      const page = await pdfDoc.getPage(pageNum);
+      const baseViewport = page.getViewport({ scale: 1 });
 
-    <div class="theme-toggle-row">
-      <span class="theme-toggle-label" id="musicToggleLabel">Music</span>
-      <button class="theme-toggle" id="musicToggle" role="switch" aria-checked="false" aria-labelledby="musicToggleLabel">
-        <span class="theme-toggle-thumb"></span>
-      </button>
-    </div>
+      let fitWidth;
+      if (isMobile) {
+        fitWidth = window.innerWidth;
+      } else {
+        fitWidth = container.clientWidth - 32;
+        const maxFitWidth = isFullscreenActive() ? 1200 : 800;
+        if (fitWidth > maxFitWidth) fitWidth = maxFitWidth;
+      }
 
-    <a class="facebook-placeholder" href="https://www.facebook.com/gcccsSPECS" target="_blank" rel="noopener">
-      <span class="placeholder-thumb">FB</span>
-      SPECS' Official Facebook Page
-    </a>
+      const fitScale = fitWidth / baseViewport.width;
+      const displayScale = fitScale * zoomLevel;
+      const renderScale = displayScale * DPR;
 
-    <div class="credit-marquee" aria-label="Music credit">
-      <div class="credit-marquee-track">
-        <span class="credit-marquee-item">♪ Clair de Lune — Claude Debussy</span>
-        <span class="credit-marquee-item" aria-hidden="true">♪ Clair de Lune — Claude Debussy</span>
-      </div>
-    </div>
-  </div>
-</div>
+      const displayWidth = Math.round(baseViewport.width * displayScale);
+      const displayHeight = Math.round(baseViewport.height * displayScale);
+      const viewport = page.getViewport({ scale: renderScale });
 
-<audio id="bgm" loop preload="auto">
-  <source src="Music/Clair.mp3" type="audio/mpeg">
-</audio>
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      canvas.style.width = displayWidth + 'px';
+      canvas.style.height = displayHeight + 'px';
 
-<?php if ($subject): ?>
-<script>window.REVIEWER_PDF_PATH = <?php echo json_encode($subject['pdf']); ?>;</script>
-<script src="assets/js/parallax.js?v=<?= ASSET_VER ?>" defer></script>
-<script src="assets/js/fab.js?v=<?= ASSET_VER ?>" defer></script>
-<script src="assets/js/reviewer.js?v=<?= ASSET_VER ?>" defer></script>
-<?php else: ?>
-<script src="assets/js/parallax.js?v=<?= ASSET_VER ?>" defer></script>
-<script src="assets/js/fab.js?v=<?= ASSET_VER ?>" defer></script>
-<?php endif; ?>
+      const ctx = canvas.getContext('2d');
+      ctx.scale(DPR, DPR);
+      await page.render({
+        canvasContext: ctx,
+        viewport: page.getViewport({ scale: displayScale })
+      }).promise;
 
-</body>
-</html>
+      pageDiv.innerHTML = '';
+      pageDiv.appendChild(canvas);
+      pageCanvases.set(pageNum, canvas);
+    } catch (err) {
+      console.error(`Error rendering page ${pageNum}:`, err);
+      pageDiv.innerHTML = '<div class="page-loading error">Failed to load page</div>';
+    } finally {
+      loadingPages.delete(pageNum);
+    }
+  }
+
+  function setupEventListeners() {
+    document.getElementById('prevBtn')?.addEventListener('click', () => navigateToPage(currentPage - 1));
+    document.getElementById('nextBtn')?.addEventListener('click', () => navigateToPage(currentPage + 1));
+    document.getElementById('mobilePrevBtn')?.addEventListener('click', () => navigateToPage(currentPage - 1));
+    document.getElementById('mobileNextBtn')?.addEventListener('click', () => navigateToPage(currentPage + 1));
+
+    document.getElementById('fullscreenBtn')?.addEventListener('click', toggleFullscreen);
+    document.getElementById('mobileFullscreenBtn')?.addEventListener('click', toggleFullscreen);
+
+    document.getElementById('hideToolbarBtn')?.addEventListener('click', () => {
+      if (isFullscreenActive()) setControlsHidden(true);
+    });
+    document.getElementById('showToolbarBtn')?.addEventListener('click', () => {
+      setControlsHidden(false);
+    });
+
+    document.getElementById('jumpBtn')?.addEventListener('click', () => {
+      const n = parseInt(document.getElementById('jumpInput').value, 10);
+      if (n) navigateToPage(n);
+    });
+    document.getElementById('jumpInput')?.addEventListener('keypress', e => {
+      if (e.key === 'Enter') {
+        const n = parseInt(e.target.value, 10);
+        if (n) navigateToPage(n);
+      }
+    });
+
+    document.getElementById('zoomIn')?.addEventListener('click', () => changeZoom(0.25));
+    document.getElementById('zoomOut')?.addEventListener('click', () => changeZoom(-0.25));
+    document.getElementById('mobileZoomIn')?.addEventListener('click', () => changeZoom(0.5));
+    document.getElementById('mobileZoomOut')?.addEventListener('click', () => changeZoom(-0.5));
+
+    let scrollTicking = false;
+    container.addEventListener('scroll', () => {
+      if (scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(() => {
+        const { scrollTop, clientHeight, scrollHeight } = container;
+        if (scrollTop + clientHeight > scrollHeight - 500) {
+          const nextPageToLoad = pageCanvases.size + loadingPages.size + 1;
+          if (nextPageToLoad <= pdfDoc.numPages) renderPage(nextPageToLoad);
+        }
+        updateCurrentPageFromScroll();
+        scrollTicking = false;
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      const tag = (e.target && e.target.tagName) || '';
+      const typing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+      if (e.key === 'ArrowRight') navigateToPage(currentPage + 1);
+      else if (e.key === 'ArrowLeft') navigateToPage(currentPage - 1);
+      else if ((e.key === 'f' || e.key === 'F') && !typing) toggleFullscreen();
+    });
+
+    let touchStartX = 0, touchStartY = 0, isSwiping = false;
+    container.addEventListener('touchstart', e => {
+      if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isSwiping = false;
+      }
+    }, { passive: true });
+    container.addEventListener('touchmove', e => {
+      if (e.touches.length === 1) {
+        const dx = e.touches[0].clientX - touchStartX;
+        const dy = e.touches[0].clientY - touchStartY;
+        if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) isSwiping = true;
+      }
+    }, { passive: true });
+    container.addEventListener('touchend', e => {
+      if (e.changedTouches.length !== 1) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      if (!isSwiping && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        if (dx > 0) navigateToPage(currentPage - 1);
+        else navigateToPage(currentPage + 1);
+      }
+    }, { passive: true });
+
+    window.addEventListener('resize', () => scheduleRelayout(300));
+  }
+
+  function changeZoom(delta) {
+    const newZoom = zoomLevel + delta;
+    if (newZoom >= 0.5 && newZoom <= 3) {
+      zoomLevel = newZoom;
+      document.getElementById('zoomLabel').textContent = Math.round(zoomLevel * 100) + '%';
+      pageCanvases.clear();
+      loadingPages.clear();
+      container.innerHTML = '<div class="status">Re-rendering...</div>';
+      renderPage(currentPage).then(() => {
+        const s = container.querySelector('.status');
+        if (s) s.remove();
+        if (currentPage > 1) renderPage(currentPage - 1);
+        renderPage(currentPage + 1);
+        scrollToPage(currentPage);
+      });
+    }
+  }
+
+  function navigateToPage(pageNum) {
+    if (pageNum < 1 || pageNum > pdfDoc.numPages) return;
+    if (!pageCanvases.has(pageNum)) {
+      renderPage(pageNum).then(() => scrollToPage(pageNum));
+    } else {
+      scrollToPage(pageNum);
+    }
+  }
+
+  function scrollToPage(pageNum) {
+    const el = document.getElementById(`page-${pageNum}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      updatePageIndicator(pageNum);
+    }
+  }
+
+  function updateCurrentPageFromScroll() {
+    const pages = container.querySelectorAll('.pdf-page');
+    const containerTop = container.getBoundingClientRect().top;
+    for (const page of pages) {
+      const rect = page.getBoundingClientRect();
+      if (rect.bottom > containerTop && rect.top < containerTop + 200) {
+        updatePageIndicator(parseInt(page.dataset.pageNum));
+        break;
+      }
+    }
+  }
+
+  function updatePageIndicator(pageNum) {
+    currentPage = pageNum;
+    document.getElementById('currentPageNum').textContent = pageNum;
+    document.getElementById('jumpInput').value = pageNum;
+    document.getElementById('prevBtn').disabled = pageNum === 1;
+    document.getElementById('nextBtn').disabled = pageNum === pdfDoc.numPages;
+    document.getElementById('mobilePageIndicator').textContent = `${pageNum}/${pdfDoc.numPages}`;
+    document.getElementById('mobilePrevBtn').disabled = pageNum === 1;
+    document.getElementById('mobileNextBtn').disabled = pageNum === pdfDoc.numPages;
+  }
+
+  init();
+})();
