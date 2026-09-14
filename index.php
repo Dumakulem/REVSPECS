@@ -1,5 +1,5 @@
 <?php
-define('ASSET_VER', '1.0.0');
+define('ASSET_VER', '1.3.2');
 $subjects = include 'subjects-config.php';
 $years = [1 => ['subjects' => []], 2 => ['subjects' => []], 3 => ['subjects' => []]];
 foreach ($subjects as $code => $info) {
