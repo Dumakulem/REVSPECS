@@ -5,6 +5,13 @@
     return;
   }
 
+  function findNextPageToLoad() {
+    for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+      if (!pageCanvases.has(pageNum) && !loadingPages.has(pageNum)) return pageNum;
+    }
+    return pdfDoc.numPages + 1;
+  }
+
   pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
@@ -16,7 +23,8 @@
   let currentPage = 1;
   let zoomLevel = 1;
   const pageCanvases = new Map();
-  const loadingPages = new Set();
+  const loadingPages = new Map();
+  let renderGeneration = 0;
   const container = document.getElementById('pdfContainer');
   const statusEl = document.getElementById('status');
 
@@ -121,6 +129,7 @@
     resizeTimer = setTimeout(() => {
       if (!pdfDoc) return;
       isMobile = window.innerWidth <= 768;
+      renderGeneration++;
       pageCanvases.clear();
       loadingPages.clear();
       container.innerHTML = '';
@@ -162,8 +171,11 @@
   }
 
   async function renderPage(pageNum) {
-    if (pageNum > pdfDoc.numPages || pageCanvases.has(pageNum) || loadingPages.has(pageNum)) return;
-    loadingPages.add(pageNum);
+    if (pageNum < 1 || pageNum > pdfDoc.numPages || pageCanvases.has(pageNum)) return;
+
+    const generation = renderGeneration;
+    if (loadingPages.get(pageNum) === generation) return;
+    loadingPages.set(pageNum, generation);
 
     const pageDiv = document.createElement('div');
     pageDiv.className = 'pdf-page';
@@ -174,6 +186,7 @@
 
     try {
       const page = await pdfDoc.getPage(pageNum);
+      if (generation !== renderGeneration) return;
       const baseViewport = page.getViewport({ scale: 1 });
 
       let fitWidth;
@@ -206,14 +219,16 @@
         viewport: page.getViewport({ scale: displayScale })
       }).promise;
 
+      if (generation !== renderGeneration) return;
       pageDiv.innerHTML = '';
       pageDiv.appendChild(canvas);
       pageCanvases.set(pageNum, canvas);
     } catch (err) {
+      if (generation !== renderGeneration) return;
       console.error(`Error rendering page ${pageNum}:`, err);
       pageDiv.innerHTML = '<div class="page-loading error">Failed to load page</div>';
     } finally {
-      loadingPages.delete(pageNum);
+      if (loadingPages.get(pageNum) === generation) loadingPages.delete(pageNum);
     }
   }
 
@@ -256,7 +271,7 @@
       requestAnimationFrame(() => {
         const { scrollTop, clientHeight, scrollHeight } = container;
         if (scrollTop + clientHeight > scrollHeight - 500) {
-          const nextPageToLoad = pageCanvases.size + loadingPages.size + 1;
+          const nextPageToLoad = findNextPageToLoad();
           if (nextPageToLoad <= pdfDoc.numPages) renderPage(nextPageToLoad);
         }
         updateCurrentPageFromScroll();
@@ -305,6 +320,7 @@
     if (newZoom >= 0.5 && newZoom <= 3) {
       zoomLevel = newZoom;
       document.getElementById('zoomLabel').textContent = Math.round(zoomLevel * 100) + '%';
+      renderGeneration++;
       pageCanvases.clear();
       loadingPages.clear();
       container.innerHTML = '<div class="status">Re-rendering...</div>';
