@@ -1,0 +1,224 @@
+{
+  "nodes": [
+    {
+      "id": "admin/_common.php",
+      "label": "_common.php",
+      "type": "file",
+      "filePath": "admin/_common.php"
+    },
+    {
+      "id": "admin/_example.json",
+      "label": "_example.json",
+      "type": "file",
+      "filePath": "admin/_example.json"
+    },
+    {
+      "id": "admin/index.php",
+      "label": "index.php",
+      "type": "file",
+      "filePath": "admin/index.php"
+    },
+    {
+      "id": "admin/login.php",
+      "label": "login.php",
+      "type": "file",
+      "filePath": "admin/login.php"
+    },
+    {
+      "id": "admin/logout.php",
+      "label": "logout.php",
+      "type": "file",
+      "filePath": "admin/logout.php"
+    },
+    {
+      "id": "admin/setup.php",
+      "label": "setup.php",
+      "type": "file",
+      "filePath": "admin/setup.php"
+    },
+    {
+      "id": "admin/subject-delete.php",
+      "label": "subject-delete.php",
+      "type": "file",
+      "filePath": "admin/subject-delete.php"
+    },
+    {
+      "id": "admin/subject-edit.php",
+      "label": "subject-edit.php",
+      "type": "file",
+      "filePath": "admin/subject-edit.php"
+    },
+    {
+      "id": "admin/upload-pdf.php",
+      "label": "upload-pdf.php",
+      "type": "file",
+      "filePath": "admin/upload-pdf.php"
+    },
+    {
+      "id": "admin/upload-quiz.php",
+      "label": "upload-quiz.php",
+      "type": "file",
+      "filePath": "admin/upload-quiz.php"
+    },
+    {
+      "id": "assets/css/base.css",
+      "label": "base.css",
+      "type": "file",
+      "filePath": "assets/css/base.css"
+    },
+    {
+      "id": "assets/css/fab.css",
+      "label": "fab.css",
+      "type": "file",
+      "filePath": "assets/css/fab.css"
+    },
+    {
+      "id": "assets/css/index.css",
+      "label": "index.css",
+      "type": "file",
+      "filePath": "assets/css/index.css"
+    },
+    {
+      "id": "assets/css/parallax.css",
+      "label": "parallax.css",
+      "type": "file",
+      "filePath": "assets/css/parallax.css"
+    },
+    {
+      "id": "assets/css/quiz.css",
+      "label": "quiz.css",
+      "type": "file",
+      "filePath": "assets/css/quiz.css"
+    },
+    {
+      "id": "assets/css/reviewer.css",
+      "label": "reviewer.css",
+      "type": "file",
+      "filePath": "assets/css/reviewer.css"
+    },
+    {
+      "id": "assets/js/fab.js",
+      "label": "fab.js",
+      "type": "file",
+      "filePath": "assets/js/fab.js"
+    },
+    {
+      "id": "assets/js/index.js",
+      "label": "index.js",
+      "type": "file",
+      "filePath": "assets/js/index.js"
+    },
+    {
+      "id": "assets/js/parallax.js",
+      "label": "parallax.js",
+      "type": "file",
+      "filePath": "assets/js/parallax.js"
+    },
+    {
+      "id": "assets/js/quiz.js",
+      "label": "quiz.js",
+      "type": "file",
+      "filePath": "assets/js/quiz.js"
+    },
+    {
+      "id": "assets/js/reviewer.js",
+      "label": "reviewer.js",
+      "type": "file",
+      "filePath": "assets/js/reviewer.js"
+    },
+    {
+      "id": "config/database.php",
+      "label": "database.php",
+      "type": "file",
+      "filePath": "config/database.php"
+    },
+    {
+      "id": "generate_quiz.php",
+      "label": "generate_quiz.php",
+      "type": "file",
+      "filePath": "generate_quiz.php"
+    },
+    {
+      "id": "index.php",
+      "label": "index.php",
+      "type": "file",
+      "filePath": "index.php"
+    },
+    {
+      "id": "quiz.html",
+      "label": "quiz.html",
+      "type": "file",
+      "filePath": "quiz.html"
+    },
+    {
+      "id": "quiz.php",
+      "label": "quiz.php",
+      "type": "file",
+      "filePath": "quiz.php"
+    },
+    {
+      "id": "README-ADMIN.md",
+      "label": "README-ADMIN.md",
+      "type": "file",
+      "filePath": "README-ADMIN.md"
+    },
+    {
+      "id": "reviewer.php",
+      "label": "reviewer.php",
+      "type": "file",
+      "filePath": "reviewer.php"
+    },
+    {
+      "id": "revspecs-ai-quiz-demo.html",
+      "label": "revspecs-ai-quiz-demo.html",
+      "type": "file",
+      "filePath": "revspecs-ai-quiz-demo.html"
+    },
+    {
+      "id": "subjects-config.php",
+      "label": "subjects-config.php",
+      "type": "file",
+      "filePath": "subjects-config.php"
+    },
+    {
+      "id": "uploads/quizzes/CS-111_124737902aee7b76.json",
+      "label": "CS-111_124737902aee7b76.json",
+      "type": "file",
+      "filePath": "uploads/quizzes/CS-111_124737902aee7b76.json"
+    },
+    {
+      "id": "uploads/quizzes/CS-211_b918897ce9dfcca4.json",
+      "label": "CS-211_b918897ce9dfcca4.json",
+      "type": "file",
+      "filePath": "uploads/quizzes/CS-211_b918897ce9dfcca4.json"
+    },
+    {
+      "id": "uploads/quizzes/CSP214L_847ce4a934241883.json",
+      "label": "CSP214L_847ce4a934241883.json",
+      "type": "file",
+      "filePath": "uploads/quizzes/CSP214L_847ce4a934241883.json"
+    }
+  ],
+  "edges": [
+    {
+      "from": "assets/js/fab.js",
+      "to": "assets/js/index.js",
+      "relation": "imports"
+    },
+    {
+      "from": "assets/js/index.js",
+      "to": "assets/js/quiz.js",
+      "relation": "imports"
+    },
+    {
+      "from": "assets/js/index.js",
+      "to": "assets/js/reviewer.js",
+      "relation": "imports"
+    },
+    {
+      "from": "assets/js/quiz.js",
+      "to": "assets/js/reviewer.js",
+      "relation": "imports"
+    }
+  ]
+}
